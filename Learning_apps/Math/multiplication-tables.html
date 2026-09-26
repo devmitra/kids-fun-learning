@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Times Tables Fun (1 to 10)</title>
+<style>
+:root{
+  --primary:#1976d2;--primary-dark:#115293;--secondary:#9c27b0;--success:#2e7d32;--warning:#ed6c02;--error:#d32f2f;
+  --bg:#eef4fb;--surface:#fff;--text:#1f2937;
+  --e1:0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+  --e2:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
+  --e4:0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
+  --e8:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:Roboto,"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:20px;line-height:1.4}
+/* App bar */
+header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:8px 16px;min-height:64px;background:var(--primary);color:#fff;box-shadow:var(--e4);flex-wrap:wrap;gap:8px}
+header h1{font-size:24px;margin:0;font-weight:500;letter-spacing:.15px}
+.hbtn{position:relative;overflow:hidden;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:999px;font-size:16px;padding:8px 16px;min-height:40px;cursor:pointer;font-family:inherit;font-weight:500;letter-spacing:.4px}
+.hbtn:hover{background:rgba(255,255,255,.28)}
+main{max-width:860px;margin:0 auto;padding:16px}
+.screen{display:none}.screen.active{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* Cards (Paper) */
+.card{background:var(--surface);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:var(--e1)}
+h2{margin:0 0 12px;font-size:24px;font-weight:500;color:var(--primary-dark)}
+/* Helper */
+.helper{display:flex;align-items:center;gap:14px;background:#e3f2fd}
+.helper .fox{font-size:64px;animation:bob 2s ease-in-out infinite}
+.bubble{background:#fff;border-radius:4px 20px 20px 20px;padding:12px 16px;flex:1;box-shadow:var(--e1);font-weight:500}
+@keyframes bob{50%{transform:translateY(-8px)}}
+/* Table number tiles */
+.grid10{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px}
+.big{position:relative;overflow:hidden;border:none;border-radius:16px;padding:14px 8px;font-size:36px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;box-shadow:var(--e2);transition:box-shadow .2s,transform .2s}
+.big:hover{box-shadow:var(--e8);transform:translateY(-3px)}
+.big small{display:block;font-size:15px;letter-spacing:2px;min-height:20px;font-weight:400}
+/* Buttons (contained) */
+.btn{position:relative;overflow:hidden;border:none;border-radius:14px;padding:14px 24px;min-height:52px;font-size:19px;font-weight:600;color:#fff;background:var(--success);cursor:pointer;font-family:inherit;box-shadow:var(--e2);margin:4px;letter-spacing:.3px;transition:box-shadow .2s,filter .2s}
+.btn:hover{box-shadow:var(--e8);filter:brightness(1.08)}
+.btn:active{box-shadow:var(--e1)}
+.btn.blue{background:var(--primary)}.btn.orange{background:var(--warning)}.btn.pink{background:var(--secondary)}.btn.gray{background:#607d8b}
+/* Ripple */
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);animation:rip .6s ease-out;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+/* Groups */
+.groups{display:flex;flex-wrap:wrap;gap:10px;min-height:70px}
+.grp{background:#e3f2fd;border:2px solid var(--primary);border-radius:12px;padding:6px 10px;font-size:22px;max-width:190px;animation:pop .3s;box-shadow:var(--e1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.eq{font-size:30px;font-weight:700;color:var(--secondary);margin:10px 0}
+/* Skip counting */
+.skip{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.bub{width:62px;height:62px;border-radius:50%;background:#e8eaf6;box-shadow:var(--e1);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;transition:.2s}
+.bub.on{background:#ffca28;transform:scale(1.2);box-shadow:var(--e4)}
+/* Table list: single column */
+.list{display:flex;flex-direction:column;gap:8px;max-width:420px;margin:0 auto}
+.row{background:#f3f6fd;border-left:6px solid currentColor;border-radius:8px 12px 12px 8px;padding:10px 16px;font-size:26px;text-align:center;font-weight:700;box-shadow:var(--e1)}
+.trick{background:#e8f5e9;border-left:6px solid var(--success);border-radius:8px 12px 12px 8px;padding:14px 16px}
+/* Matching */
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.mc{position:relative;overflow:hidden;height:90px;border:none;border-radius:14px;font-size:28px;font-weight:700;font-family:inherit;cursor:pointer;background:var(--primary);color:#fff;box-shadow:var(--e2);transition:transform .2s,box-shadow .2s}
+.mc:hover{box-shadow:var(--e8)}
+.mc.open{background:#fff;color:var(--text);outline:3px solid var(--primary);transform:rotateY(0)}
+.mc.done{background:var(--success);color:#fff;outline:none}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:22px;font-weight:500}
+.timer{background:var(--error);color:#fff;border-radius:999px;padding:6px 18px;font-weight:700;box-shadow:var(--e2)}
+#cScore,#mMoves{background:#fff8e1;border-radius:999px;padding:6px 16px;box-shadow:var(--e1)}
+.q{font-size:64px;text-align:center;font-weight:700;margin:12px 0;color:var(--primary-dark)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{position:relative;overflow:hidden;font-size:42px;padding:18px;border:none;border-radius:16px;background:var(--primary);color:#fff;cursor:pointer;font-family:inherit;font-weight:700;box-shadow:var(--e2);transition:box-shadow .2s}
+.opt:hover{box-shadow:var(--e8)}
+.opt.good{background:var(--success)}.opt.bad{background:var(--error);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.seg{display:inline-flex;border:1px solid var(--primary);border-radius:999px;overflow:hidden;box-shadow:var(--e1)}
+.seg button{position:relative;overflow:hidden;border:none;background:#fff;color:var(--primary);font-family:inherit;font-size:22px;font-weight:600;padding:10px 26px;min-height:52px;cursor:pointer;border-right:1px solid var(--primary)}
+.seg button:last-child{border-right:none}
+.seg button.sel{background:var(--primary);color:#fff}
+.h2row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.h2row h2{margin:0}
+.dialog.tall{max-width:520px;max-height:96vh;display:flex;flex-direction:column;padding:16px 16px 14px}
+.dialog.tall h2{margin:0 0 8px;font-size:22px}
+.dialog.tall .btn{min-height:44px;padding:8px 22px;margin:0}
+.list.big{max-width:none;flex:1 1 auto;min-height:0;overflow-y:auto;gap:4px;--n:10}
+.list.big .row{padding:4px 12px;line-height:1.3;flex-shrink:0;font-size:clamp(14px,calc(((96vh - 170px) / var(--n) - 12px) / 1.3),34px)}
+.dialog.rules{max-width:480px;text-align:left}
+.dialog.rules h2{text-align:center}
+.dialog.rules ol{padding-left:26px;margin:0 0 14px;font-size:19px}
+.dialog.rules li{margin-bottom:10px}
+.dialog.rules .btn{display:block;margin:0 auto}
+.setrow{display:flex;justify-content:flex-end;margin:-6px 4px 10px}
+.gear{position:relative;overflow:hidden;min-width:44px;height:40px;padding:0 14px;border-radius:999px;font-family:inherit;font-size:15px;color:#5b6675;border:none;background:#eceff1;font-size:20px;cursor:pointer;opacity:.65;transition:opacity .2s,background .2s}
+.gear:hover,.gear:focus-visible{opacity:1;background:#dfe6ec;outline:2px solid var(--primary)}
+.overlay{position:fixed;inset:0;background:rgba(20,30,50,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.overlay.show{display:flex;animation:fadeIn .2s}
+.dialog{position:relative;background:#fff;border-radius:20px;padding:26px 22px 22px;max-width:420px;width:100%;text-align:center;box-shadow:var(--e8)}
+.dialog h2{padding:0 30px}
+.xbtn{position:absolute;top:8px;right:8px;width:44px;height:44px;border-radius:50%;border:none;background:#eceff1;font-size:20px;cursor:pointer}
+.xbtn:hover{background:#dfe6ec}
+.dslots{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.dslot{display:flex;align-items:center;justify-content:center;gap:8px;background:#f3f6fd;border-radius:14px;padding:10px;font-size:26px;font-weight:700;box-shadow:var(--e1);transition:background .15s}
+.dslot .drop{min-width:76px;height:54px;border:3px dashed var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff}
+.dslot.hot{background:#e3f2fd}.dslot.hot .drop{border-style:solid;background:#bbdefb}
+.dslot.ok .drop{border:3px solid var(--success);background:var(--success);color:#fff}
+.dslot.no{animation:shake .3s}
+.dpool{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;min-height:70px}
+.dtile{touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;min-width:76px;height:60px;padding:0 16px;border-radius:14px;background:var(--secondary);color:#fff;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:var(--e2)}
+.dtile.sel{outline:4px solid #ffca28}
+.dtile.lift{opacity:.35}
+.dtile.ghost{position:fixed;z-index:100;pointer-events:none;transform:translate(-50%,-50%) scale(1.1);box-shadow:var(--e8);opacity:.95}
+.miss{text-align:left;background:#fff8e1;border-left:6px solid var(--warning);border-radius:8px 12px 12px 8px;padding:10px 16px;margin:10px 0;font-size:22px}
+.miss div{padding:2px 0;font-weight:700}
+.msg{text-align:center;font-size:24px;min-height:36px;font-weight:500;margin-top:10px}
+.stars{font-size:56px;text-align:center}
+.center{text-align:center}
+.confetti{position:fixed;top:-20px;font-size:30px;animation:fall 2.5s linear forwards;pointer-events:none;z-index:99}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@media(max-width:520px){.mgrid{grid-template-columns:repeat(3,1fr)}.q{font-size:48px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🦊 Times Tables Fun</h1>
+  <div><button class="hbtn" id="homeBtn" onclick="goHome()">🏠 Home</button>
+  <button class="hbtn" id="muteBtn" onclick="toggleMute()">🔊 Sound on</button></div>
+</header>
+<main>
+
+<!-- HOME -->
+<section id="home" class="screen active">
+  <div class="card helper"><div class="fox">🦊</div><div class="bubble" id="homeSay">Hi! I am Foxy. Pick a number to learn its table!</div></div>
+  <div class="card"><h2>Pick a table</h2><div class="grid10" id="tableBtns"></div></div>
+  <div class="card center">
+    <button class="btn orange" onclick="startChallenge(0)">⏱️ Mixed 60-second challenge</button>
+    <button class="btn pink" onclick="startDrag(0)">🧩 Mixed Drag &amp; Match</button>
+    <button class="btn blue" onclick="startMatch(0)">🃏 Mixed memory cards</button>
+    <p id="totalStars"></p>
+  </div>
+</section>
+
+<!-- LEARN -->
+<section id="learn" class="screen">
+  <div class="card helper"><div class="fox">🦊</div><div class="bubble" id="learnSay"></div></div>
+  <div class="setrow"><button class="gear" id="gearBtn" onclick="openPop()" aria-haspopup="dialog" aria-label="Change how far the table goes" title="Change how far the table goes">⚙️ <span id="gearLbl">× 10</span></button></div>
+  <div class="card">
+    <div class="h2row"><h2 id="listTitle">1. The table</h2>
+      <button class="gear" id="expBtn" onclick="openTbl()" aria-haspopup="dialog" aria-label="Expand the table" title="Expand the table">⤢ <span>Expand</span></button></div>
+    <div class="list" id="list"></div>
+  </div>
+  <div class="card">
+    <h2>2. Equal groups</h2>
+    <p id="grpText"></p>
+    <div class="groups" id="groups"></div>
+    <div class="eq" id="grpEq"></div>
+    <button class="btn blue" onclick="addGroup()">➕ Add a group</button>
+    <button class="btn gray" onclick="resetGroups()">↺ Start again</button>
+  </div>
+  <div class="card">
+    <h2>3. Skip counting</h2>
+    <p id="skipText"></p>
+    <div class="skip" id="skip"></div>
+    <button class="btn blue" onclick="playSkip()">▶️ Count with me</button>
+  </div>
+  <div class="card"><h2>💡 Easy trick</h2><div class="trick" id="trick"></div></div>
+  <div class="card center">
+    <button class="btn pink" onclick="startDrag(cur)">🧩 Drag &amp; Match</button>
+    <button class="btn blue" onclick="startMatch(cur)">🃏 Memory cards</button>
+    <button class="btn orange" onclick="startChallenge(cur)">⏱️ 60-second challenge</button>
+  </div>
+</section>
+
+<!-- MATCH -->
+<section id="match" class="screen">
+  <div class="card">
+    <div class="top"><span id="mTitle"></span><span><button class="gear" id="rulesBtn" onclick="openRules()" aria-haspopup="dialog" aria-label="How to play" title="How to play">❓ <span>How to play</span></button> <span id="mMoves">Tries: 0</span></span></div>
+    <p class="center">Find a fact and its answer. Example: 3 × 4 and 12.</p>
+    <div class="mgrid" id="mgrid"></div>
+  </div>
+</section>
+
+<!-- DRAG MATCH -->
+<section id="dmatch" class="screen">
+  <div class="card">
+    <div class="top"><span id="dTitle"></span><span id="dScore">Solved: 0</span></div>
+    <p class="center">Drag each answer to the fact it belongs to. You can also tap an answer, then tap a fact.</p>
+    <div class="dslots" id="dSlots"></div>
+    <h3 class="center" style="margin:16px 0 8px">Answers</h3>
+    <div class="dpool" id="dPool"></div>
+    <div class="msg" id="dMsg"></div>
+  </div>
+</section>
+
+<!-- CHALLENGE -->
+<section id="challenge" class="screen">
+  <div class="card">
+    <div class="top"><span id="cTitle"></span><span class="timer" id="cTime">60</span><span id="cScore">⭐ 0</span></div>
+    <div class="q" id="cQ"></div>
+    <div class="opts" id="cOpts"></div>
+    <div class="msg" id="cMsg"></div>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section id="result" class="screen">
+  <div class="card center">
+    <div class="fox" style="font-size:80px">🦊</div>
+    <h2 id="rTitle"></h2>
+    <div class="stars" id="rStars"></div>
+    <p id="rText"></p>
+    <div id="rExtra"></div>
+    <button class="btn orange" id="rPractise" style="display:none">🎯 Practise these</button>
+    <button class="btn blue" id="rAgain">🔁 Play again</button>
+    <button class="btn" onclick="goHome()">🏠 Home</button>
+  </div>
+</section>
+</main>
+
+<div class="overlay" id="pop" onclick="if(event.target===this)closePop()" aria-hidden="true">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="popTitle">
+    <button class="xbtn" id="popClose" onclick="closePop()" aria-label="Close">✕</button>
+    <h2 id="popTitle">How far should the table go?</h2>
+    <p class="note">Pick the last number to multiply by.</p>
+    <div class="seg" id="seg"></div>
+    <div style="margin-top:18px"><button class="btn gray" onclick="closePop()">Done</button></div>
+  </div>
+</div>
+<div class="overlay" id="tblPop" onclick="if(event.target===this)closeTbl()" aria-hidden="true">
+  <div class="dialog tall" role="dialog" aria-modal="true" aria-labelledby="tblTitle">
+    <button class="xbtn" id="tblClose" onclick="closeTbl()" aria-label="Close">✕</button>
+    <h2 id="tblTitle"></h2>
+    <div class="list big" id="listBig"></div>
+    <div style="margin-top:10px"><button class="btn gray" onclick="closeTbl()">Done</button></div>
+  </div>
+</div>
+<div class="overlay" id="rulesPop" onclick="if(event.target===this)closeRules()" aria-hidden="true">
+  <div class="dialog rules" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+    <button class="xbtn" id="rulesClose" onclick="closeRules()" aria-label="Close">✕</button>
+    <h2 id="rulesTitle">🃏 How to play</h2>
+    <ol>
+      <li>You see cards with <b>?</b> on them. They hide pairs.</li>
+      <li>A pair is a <b>fact</b> and its <b>answer</b>.<br>Example: <b>3 × 4</b> and <b>12</b>.</li>
+      <li>Tap one card. Then tap a second card.</li>
+      <li>Same pair? The cards turn <b style="color:#2e7d32">green</b> and stay open. 🎉</li>
+      <li>Not a pair? The cards turn back. Try to remember them!</li>
+      <li>Find all pairs to win. Fewer tries means more stars: ⭐⭐⭐ for 9 tries or fewer.</li>
+    </ol>
+    <button class="btn" onclick="closeRules()">Let's play!</button>
+  </div>
+</div>
+<script>
+// ---------- Setup ----------
+var COLORS=["#ff5b5b","#ff8a2b","#e6b800","#22b573","#19a7a7","#3b8bff","#5b6cff","#9b59ff","#f0489b","#e0543c"];
+var EMOJI=["🍎","🐟","⭐","🐞","🍪","🎈","🐸","🌻","🚗","🍓"];
+var TRICKS={
+1:"Any number × 1 stays the same. 1 group of 7 is 7!",
+2:"× 2 means doubles. 2 × 6 is 6 + 6 = 12.",
+3:"× 3: double the number, then add one more group. 3 × 4 = 4 + 4 + 4 = 12.",
+4:"× 4 means double, then double again. 4 × 3: double 3 is 6, double 6 is 12.",
+5:"× 5 answers end in 0 or 5. Count by fives like fingers on a hand!",
+6:"× 6: first do × 5, then add one more group. 6 × 4 = 20 + 4 = 24.",
+7:"× 7: try 5 groups plus 2 groups. 7 × 4 = 20 + 8 = 28.",
+8:"× 8 means double three times. 8 × 3: 3, 6, 12, 24.",
+9:"× 9 trick: use your fingers! Also, the digits of the answer add up to 9 (9 × 3 = 27, and 2 + 7 = 9).",
+10:"× 10: just put a zero at the end. 10 × 6 = 60."
+};
+var CHEERS=["Great job!","Wow!","You rock!","Super!","Yes! Well done!","Awesome!","Fantastic!"];
+var muted=false, actx=null, cur=1, LIM=10;
+try{var _l=parseInt(localStorage.getItem("kidsLearningMultLimit"),10);if(_l===10||_l===12||_l===20)LIM=_l}catch(e){}
+function K(t){return LIM===10?String(t):t+"@"+LIM}
+function openPop(){var p=$("pop");p.classList.add("show");p.setAttribute("aria-hidden","false");$("popClose").focus()}
+function closePop(){var p=$("pop");if(!p.classList.contains("show"))return;p.classList.remove("show");p.setAttribute("aria-hidden","true");var g=$("gearBtn");if(g&&$("learn").classList.contains("active"))g.focus()}
+function openTbl(){
+  $("tblTitle").textContent="The "+cur+" times table";
+  var b=$("listBig");b.innerHTML=$("list").innerHTML;b.style.setProperty("--n",LIM);b.scrollTop=0;
+  var p=$("tblPop");p.classList.add("show");p.setAttribute("aria-hidden","false");$("tblClose").focus();
+}
+function closeTbl(){
+  var p=$("tblPop");if(!p.classList.contains("show"))return;
+  p.classList.remove("show");p.setAttribute("aria-hidden","true");
+  var g=$("expBtn");if(g&&$("learn").classList.contains("active"))g.focus();
+}
+function openRules(){var p=$("rulesPop");p.classList.add("show");p.setAttribute("aria-hidden","false");$("rulesClose").focus()}
+function closeRules(){
+  var p=$("rulesPop");if(!p.classList.contains("show"))return;
+  p.classList.remove("show");p.setAttribute("aria-hidden","true");
+  try{localStorage.setItem("kidsLearningMatchRulesSeen","1")}catch(e){}
+  var g=$("rulesBtn");if(g&&$("match").classList.contains("active"))g.focus();
+}
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){closePop();closeTbl();closeRules()}});
+function setLimit(v){closePop();LIM=v;try{localStorage.setItem("kidsLearningMultLimit",String(v))}catch(e){}openLearn(cur)}
+function $(id){return document.getElementById(id)}
+function rnd(n){return Math.floor(Math.random()*n)}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=rnd(i+1),t=a[i];a[i]=a[j];a[j]=t}return a}
+
+// ---------- Sound ----------
+function beep(freq,dur,type){
+  if(muted)return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    var o=actx.createOscillator(),g=actx.createGain();
+    o.type=type||"sine";o.frequency.value=freq;g.gain.value=0.15;
+    o.connect(g);g.connect(actx.destination);o.start();
+    g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+dur);o.stop(actx.currentTime+dur);
+  }catch(e){}
+}
+function good(){beep(660,.15);setTimeout(function(){beep(880,.2)},120)}
+function bad(){beep(200,.3,"square")}
+function toggleMute(){muted=!muted;$("muteBtn").textContent=muted?"🔇 Sound off":"🔊 Sound on"}
+
+// ---------- Progress (shared with dashboard.html) ----------
+var KEY="kidsLearningProgress", MOD="multiplication-tables";
+function loadAll(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+function getMod(){
+  var all=loadAll();
+  var m=all[MOD]||{};
+  m.stars=m.stars||{};m.bestChallenge=m.bestChallenge||{};m.plays=m.plays||0;
+  return {all:all,m:m};
+}
+function saveMod(m){
+  try{
+    var all=loadAll();
+    m.title="Multiplication Tables 1 to 10";m.subject="Math";m.file="Math/multiplication-tables.html";
+    m.updated=new Date().toISOString();
+    all[MOD]=m;localStorage.setItem(KEY,JSON.stringify(all));
+  }catch(e){}
+}
+function giveStars(t,s){
+  var d=getMod();t=K(t);
+  if(!d.m.stars[t]||d.m.stars[t]<s)d.m.stars[t]=s;
+  d.m.plays++;saveMod(d.m);
+}
+
+// ---------- Navigation ----------
+function show(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++)s[i].classList.remove("active");
+  $(id).classList.add("active");window.scrollTo(0,0);
+}
+var timer=null;
+function goHome(){clearInterval(timer);buildHome();show("home")}
+function buildHome(){
+  var d=getMod().m,box=$("tableBtns"),total=0;box.innerHTML="";
+  for(var n=1;n<=10;n++){
+    var st=d.stars[K(n)]||0;total+=st;
+    var b=document.createElement("button");b.className="big";b.style.background=COLORS[n-1];
+    b.innerHTML=n+"<small>"+"⭐".repeat(st)+"☆".repeat(3-st)+"</small>";
+    (function(k){b.onclick=function(){openLearn(k)}})(n);
+    box.appendChild(b);
+  }
+  $("totalStars").textContent="Stars collected: "+total+" of 30";
+}
+
+// ---------- Learn ----------
+var groupCount=0;
+function openLearn(n){
+  var sg=$("seg");sg.innerHTML="";
+  [10,12,20].forEach(function(v){
+    var b=document.createElement("button");b.textContent=v;if(v===LIM)b.className="sel";
+    b.onclick=function(){setLimit(v)};sg.appendChild(b);
+  });
+  cur=n;$("learnSay").textContent="Let's learn the "+n+" times table! Tap the buttons to play.";
+  $("trick").textContent=TRICKS[n];
+  $("gearLbl").textContent="× "+LIM;
+  $("listTitle").textContent="1. The table (× 1 to × "+LIM+")";
+  $("grpText").textContent="Each group has "+n+" "+EMOJI[n-1]+". Add groups and see how many there are.";
+  resetGroups();
+  $("skipText").textContent="Count by "+n+"s. Each jump adds "+n+".";
+  var sk=$("skip");sk.innerHTML="";
+  for(var k=1;k<=LIM;k++){var b=document.createElement("div");b.className="bub";b.id="sk"+k;b.textContent=n*k;sk.appendChild(b)}
+  var ls=$("list");ls.innerHTML="";
+  for(var k=1;k<=LIM;k++){var r=document.createElement("div");r.className="row";r.style.color=COLORS[n-1];r.textContent=n+" × "+k+" = "+(n*k);ls.appendChild(r)}
+  show("learn");
+}
+function resetGroups(){groupCount=0;drawGroups()}
+function addGroup(){if(groupCount<LIM){groupCount++;beep(500+groupCount*40,.12);drawGroups()}}
+function drawGroups(){
+  var g=$("groups");g.innerHTML="";
+  for(var i=0;i<groupCount;i++){var d=document.createElement("div");d.className="grp";d.textContent=EMOJI[cur-1].repeat(cur);g.appendChild(d)}
+  $("grpEq").textContent=groupCount?groupCount+" groups of "+cur+" = "+groupCount+" × "+cur+" = "+(groupCount*cur):"0 groups so far";
+}
+function playSkip(){
+  for(var k=1;k<=LIM;k++){$("sk"+k).classList.remove("on")}
+  var i=1;
+  (function step(){
+    if(i>1)$("sk"+(i-1)).classList.remove("on");
+    if(i>LIM){return}
+    $("sk"+i).classList.add("on");beep(400+i*50,.15);i++;setTimeout(step,LIM>10?400:600);
+  })();
+}
+
+// ---------- Match ----------
+var mFirst=null,mLock=false,mMoves=0,mPairs=0,mDone=0,mTable=0;
+function pickFacts(t,count){
+  var facts=[],seen={};
+  var tries=0;
+  while(facts.length<count&&tries<500){
+    tries++;
+    var a=t?t:1+rnd(10),b=1+rnd(LIM),p=a*b;
+    if(t&&b===1&&tries<100)continue;
+    if(seen[p])continue; seen[p]=1;facts.push({a:a,b:b,p:p});
+  }
+  return facts;
+}
+function startMatch(t){
+  mTable=t;mFirst=null;mLock=false;mMoves=0;mDone=0;mPairs=6;
+  $("mTitle").textContent=t?"Memory cards: "+t+" times table (up to × "+LIM+")":"Memory cards: mixed tables (up to × "+LIM+")";
+  $("mMoves").textContent="Tries: 0";
+  var facts=pickFacts(t,6),cards=[];
+  facts.forEach(function(f,i){
+    cards.push({id:i,txt:f.a+" × "+f.b});cards.push({id:i,txt:String(f.p)});
+  });
+  shuffle(cards);
+  var g=$("mgrid");g.innerHTML="";
+  cards.forEach(function(c){
+    var b=document.createElement("button");b.className="mc";b.textContent="?";b.dataset.id=c.id;b.dataset.txt=c.txt;
+    b.onclick=function(){flip(b)};g.appendChild(b);
+  });
+  show("match");
+  var seen=false;try{seen=localStorage.getItem("kidsLearningMatchRulesSeen")==="1"}catch(e){}
+  if(!seen)openRules();
+}
+function flip(b){
+  if(mLock||b.classList.contains("open")||b.classList.contains("done"))return;
+  b.classList.add("open");b.textContent=b.dataset.txt;beep(500,.08);
+  if(!mFirst){mFirst=b;return}
+  mMoves++;$("mMoves").textContent="Tries: "+mMoves;
+  var a=mFirst;mFirst=null;
+  if(a.dataset.id===b.dataset.id){
+    a.className=b.className="mc done";good();mDone++;
+    if(mDone===mPairs)setTimeout(finishMatch,600);
+  }else{
+    mLock=true;bad();
+    setTimeout(function(){
+      a.className=b.className="mc";a.textContent=b.textContent="?";mLock=false;
+    },900);
+  }
+}
+function finishMatch(){
+  var s=mMoves<=9?3:(mMoves<=14?2:1);
+  giveStars(mTable||"mixed",s);
+  if(!mTable){/* mixed stars are counted separately */}
+  showResult("You found all pairs!",s,"You used "+mMoves+" tries.",function(){startMatch(mTable)});
+}
+
+
+// ---------- Drag & Match ----------
+var dFacts=[],dSel=null,dFirst=0,dDone=0,dTable=0,dPractice=false,dMissed={};
+function startDrag(t,facts){
+  dTable=t;dPractice=!!facts;dFacts=facts||pickFacts(t,6);dDone=0;dFirst=0;dMissed={};dSel=null;
+  $("dTitle").textContent=(dPractice?"Practice: ":"Drag & Match: ")+(t?t+" times table":"mixed tables")+" (× "+LIM+")";
+  $("dScore").textContent="Solved: 0 / "+dFacts.length;$("dMsg").textContent="";
+  var sl=$("dSlots"),pl=$("dPool");sl.innerHTML="";pl.innerHTML="";
+  dFacts.forEach(function(f,i){
+    var d=document.createElement("div");d.className="dslot";d.dataset.i=i;
+    d.innerHTML=f.a+" × "+f.b+" = <span class='drop'></span>";
+    d.onclick=function(){if(dSel&&!d.classList.contains("ok"))attempt(dSel,d)};
+    sl.appendChild(d);
+  });
+  var order=shuffle(dFacts.map(function(f,i){return i}));
+  order.forEach(function(i){
+    var t2=document.createElement("div");t2.className="dtile";t2.dataset.i=i;t2.textContent=dFacts[i].p;
+    t2.addEventListener("pointerdown",function(e){tileDown(e,t2)});pl.appendChild(t2);
+  });
+  show("dmatch");
+}
+function slotAt(x,y){var el=document.elementFromPoint(x,y);var sl=el&&el.closest?el.closest(".dslot"):null;return(sl&&!sl.classList.contains("ok"))?sl:null}
+function clearHot(){var h=document.querySelectorAll(".dslot.hot");for(var i=0;i<h.length;i++)h[i].classList.remove("hot")}
+function tileDown(e,tile){
+  e.preventDefault();
+  var sx=e.clientX,sy=e.clientY,moved=false,ghost=null;
+  try{tile.setPointerCapture(e.pointerId)}catch(x){}
+  function mv(ev){
+    if(!moved&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>8){
+      moved=true;ghost=tile.cloneNode(true);ghost.className="dtile ghost";document.body.appendChild(ghost);tile.classList.add("lift");
+    }
+    if(moved){ghost.style.left=ev.clientX+"px";ghost.style.top=ev.clientY+"px";clearHot();var sl=slotAt(ev.clientX,ev.clientY);if(sl)sl.classList.add("hot")}
+  }
+  function end(ev,cancel){
+    tile.removeEventListener("pointermove",mv);tile.removeEventListener("pointerup",up);tile.removeEventListener("pointercancel",cn);
+    if(moved){
+      ghost.remove();tile.classList.remove("lift");clearHot();
+      if(!cancel){var sl=slotAt(ev.clientX,ev.clientY);if(sl)attempt(tile,sl)}
+    }else if(!cancel){
+      var was=tile.classList.contains("sel");
+      var all=document.querySelectorAll(".dtile.sel");for(var i=0;i<all.length;i++)all[i].classList.remove("sel");
+      if(was){dSel=null}else{tile.classList.add("sel");dSel=tile;beep(500,.08)}
+    }
+  }
+  function up(ev){end(ev,false)}
+  function cn(ev){end(ev,true)}
+  tile.addEventListener("pointermove",mv);tile.addEventListener("pointerup",up);tile.addEventListener("pointercancel",cn);
+}
+function attempt(tile,slot){
+  var i=+slot.dataset.i;
+  if(+tile.dataset.i===i){
+    slot.classList.add("ok");slot.querySelector(".drop").textContent=dFacts[i].p;
+    tile.remove();dSel=null;dDone++;if(!dMissed[i])dFirst++;good();
+    $("dScore").textContent="Solved: "+dDone+" / "+dFacts.length;
+    $("dMsg").textContent=CHEERS[rnd(CHEERS.length)];
+    if(dDone===dFacts.length)setTimeout(finishDrag,700);
+  }else{
+    dMissed[i]=1;bad();tile.classList.remove("sel");dSel=null;
+    slot.classList.add("no");setTimeout(function(){slot.classList.remove("no")},350);
+    $("dMsg").textContent="Not yet. Try another answer!";
+  }
+}
+function finishDrag(){
+  var n=dFacts.length,s=dFirst===n?3:(dFirst>=Math.ceil(n*0.66)?2:1);
+  if(!dPractice)giveStars(dTable||"mixed",s);
+  var missed=dFacts.filter(function(f,i){return dMissed[i]});
+  var extra,practise=null;
+  if(missed.length){
+    extra='<div class="miss"><b>Facts to practise:</b>'+missed.map(function(f){return"<div>"+f.a+" × "+f.b+" = "+f.p+"</div>"}).join("")+"</div>";
+    practise=function(){startDrag(dTable,missed)};
+  }else{extra='<div class="miss" style="border-color:#2e7d32;background:#e8f5e9"><b>No mistakes. You know these facts!</b></div>'}
+  showResult(dPractice?"Practice done!":"All matched!",s,"You got "+dFirst+" of "+n+" right on the first try."+(dPractice?" (Practice does not change your stars.)":""),function(){startDrag(dTable)},extra,practise);
+}
+
+// ---------- Challenge ----------
+var cScore=0,cLeft=60,cA=0,cB=0,cTable=0,cLocked=false;
+function startChallenge(t){
+  cTable=t;cScore=0;cLeft=60;cLocked=false;
+  $("cTitle").textContent=(t?t+" times table":"Mixed tables")+" (× "+LIM+")";
+  $("cScore").textContent="⭐ 0";$("cTime").textContent=60;$("cMsg").textContent="";
+  show("challenge");nextQ();
+  clearInterval(timer);
+  timer=setInterval(function(){
+    cLeft--;$("cTime").textContent=cLeft;
+    if(cLeft<=0){clearInterval(timer);endChallenge()}
+  },1000);
+}
+function nextQ(){
+  cLocked=false;
+  var a=cTable?cTable:1+rnd(10),b=1+rnd(LIM);
+  cA=a;cB=b;var ans=a*b;
+  $("cQ").textContent=a+" × "+b+" = ?";
+  var opts=[ans],guard=0;
+  while(opts.length<4&&guard<200){
+    guard++;
+    var w=ans+(rnd(2)?1:-1)*(1+rnd(3))*(rnd(2)?1:a);
+    if(w>0&&opts.indexOf(w)<0)opts.push(w);
+  }
+  shuffle(opts);
+  var o=$("cOpts");o.innerHTML="";
+  opts.forEach(function(v){
+    var bt=document.createElement("button");bt.className="opt";bt.textContent=v;
+    bt.onclick=function(){answer(bt,v)};o.appendChild(bt);
+  });
+}
+function answer(bt,v){
+  if(cLocked)return;cLocked=true;
+  if(v===cA*cB){
+    bt.classList.add("good");good();cScore++;$("cScore").textContent="⭐ "+cScore;
+    $("cMsg").textContent=CHEERS[rnd(CHEERS.length)];
+    setTimeout(nextQ,500);
+  }else{
+    bt.classList.add("bad");bad();
+    $("cMsg").textContent="Not yet! "+cA+" × "+cB+" = "+(cA*cB);
+    setTimeout(nextQ,1400);
+  }
+}
+function endChallenge(){
+  var s=cScore>=12?3:(cScore>=8?2:(cScore>=4?1:0));
+  var d=getMod(),key=K(cTable||"mixed"),best=d.m.bestChallenge[key]||0,newBest=cScore>best;
+  if(newBest)d.m.bestChallenge[key]=cScore;
+  if(s>(d.m.stars[key]||0))d.m.stars[key]=s;
+  d.m.plays++;saveMod(d.m);
+  showResult("Time is up!",s,"You answered "+cScore+" correctly."+(newBest?" New best score! 🎉":" Your best is "+best+"."),function(){startChallenge(cTable)});
+}
+
+// ---------- Result ----------
+function showResult(title,s,text,again,extra,practise){
+  $("rTitle").textContent=title;
+  $("rStars").textContent="⭐".repeat(s)+"☆".repeat(3-s);
+  $("rText").textContent=text+(s===0?" Keep practicing. You can do it!":"");
+  $("rExtra").innerHTML=extra||"";
+  var pb=$("rPractise");pb.style.display=practise?"":"none";pb.onclick=practise||null;
+  $("rAgain").onclick=again;
+  show("result");
+  if(s>0){good();confetti()}
+}
+function confetti(){
+  var e=["🎉","⭐","🎈","✨"];
+  for(var i=0;i<25;i++){
+    var c=document.createElement("div");c.className="confetti";c.textContent=e[rnd(4)];
+    c.style.left=rnd(95)+"vw";c.style.animationDelay=(Math.random()*0.8)+"s";
+    document.body.appendChild(c);
+    (function(x){setTimeout(function(){x.remove()},3500)})(c);
+  }
+}
+// ---------- Material ripple effect ----------
+document.addEventListener("pointerdown",function(e){
+  var b=e.target.closest&&e.target.closest("button");
+  if(!b)return;
+  var r=b.getBoundingClientRect(),d=Math.max(r.width,r.height)/2,sp=document.createElement("span");
+  sp.className="ripple";sp.style.width=sp.style.height=d+"px";
+  sp.style.left=(e.clientX-r.left-d/2)+"px";sp.style.top=(e.clientY-r.top-d/2)+"px";
+  b.appendChild(sp);setTimeout(function(){sp.remove()},600);
+});
+buildHome();
+</script>
+</body>
+</html>

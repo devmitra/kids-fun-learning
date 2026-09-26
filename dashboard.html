@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Learning Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Comic Sans MS","Trebuchet MS",Arial,sans-serif;background:linear-gradient(#bfe9ff,#fff6d6);color:#2b2b4a;font-size:20px;min-height:100vh}
+header{background:#5b6cff;color:#fff;padding:14px 20px}
+header h1{margin:0;font-size:30px}
+main{max-width:900px;margin:0 auto;padding:16px}
+.card{background:#fff;border-radius:22px;padding:18px;margin-bottom:16px;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+h2{margin:0 0 10px}
+.mod{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#f1f4ff;border-radius:16px;padding:14px;margin-bottom:10px}
+.mod a{background:#22b573;color:#fff;text-decoration:none;border-radius:14px;padding:12px 20px;font-weight:bold}
+.meta{font-size:17px;color:#555}
+.note{font-size:16px;color:#666}
+</style>
+</head>
+<body>
+<header><h1>🦊 My Learning Dashboard</h1></header>
+<main>
+  <div class="card"><h2>⭐ Total stars: <span id="total">0</span></h2><div class="note">Scores are saved in this browser on this computer.</div></div>
+  <div class="card"><h2>🔢 Math</h2><div id="Math"></div></div>
+  <div class="card"><h2>🔬 Science</h2><div id="Science"><p class="meta">Coming soon!</p></div></div>
+</main>
+<script>
+// Add new modules to this list. "id" must match the id the module saves progress under.
+var MODULES=[
+  {id:"multiplication-tables",subject:"Math",title:"Multiplication Tables 1 to 10",file:"Learning_apps/Math/multiplication-tables.html",maxStars:30,desc:"Learn, match and race through tables 1 to 10."}
+];
+var data={};
+try{data=JSON.parse(localStorage.getItem("kidsLearningProgress"))||{}}catch(e){}
+var total=0;
+MODULES.forEach(function(m){
+  var p=data[m.id]||{stars:{},bestChallenge:{},plays:0},st=0;
+  for(var n=1;n<=10;n++){st+=Math.max(p.stars[n]||0,p.stars[n+"@12"]||0,p.stars[n+"@20"]||0)}
+  total+=st;
+  var best=0;for(var k in (p.bestChallenge||{})){best=Math.max(best,p.bestChallenge[k])}
+  var d=document.createElement("div");d.className="mod";
+  d.innerHTML='<div><b>'+m.title+'</b><div class="meta">'+m.desc+'<br>⭐ '+st+' / '+m.maxStars+' &nbsp; 🏆 Best challenge: '+best+' &nbsp; 🎮 Plays: '+(p.plays||0)+'</div></div><a href="'+m.file+'">Play</a>';
+  document.getElementById(m.subject).innerHTML==="" ;
+  var box=document.getElementById(m.subject);
+  if(box.querySelector(".meta")&&!box.querySelector(".mod"))box.innerHTML="";
+  box.appendChild(d);
+});
+document.getElementById("total").textContent=total;
+</script>
+</body>
+</html>
