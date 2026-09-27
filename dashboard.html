@@ -28,14 +28,20 @@ h2{margin:0 0 10px}
 <script>
 // Add new modules to this list. "id" must match the id the module saves progress under.
 var MODULES=[
-  {id:"multiplication-tables",subject:"Math",title:"Multiplication Tables 1 to 10",file:"Learning_apps/Math/multiplication-tables.html",maxStars:30,desc:"Learn, match and race through tables 1 to 10."}
+  {id:"multiplication-tables",subject:"Math",title:"Multiplication Tables 1 to 10",file:"Learning_apps/Math/multiplication-tables.html",maxStars:30,desc:"Learn, match and race through tables 1 to 10."},
+  {id:"addition-mastery",subject:"Math",title:"Addition Adventure",file:"Learning_apps/Math/addition-mastery.html",maxStars:15,desc:"Learn addition concepts, big numbers, mental math tricks and fast addition."},
+  {id:"subtraction-mastery",subject:"Math",title:"Subtraction Adventure",file:"Learning_apps/Math/subtraction-mastery.html",maxStars:15,desc:"Learn subtraction concepts, big numbers, mental math tricks and fast subtraction."}
 ];
 var data={};
 try{data=JSON.parse(localStorage.getItem("kidsLearningProgress"))||{}}catch(e){}
 var total=0;
 MODULES.forEach(function(m){
   var p=data[m.id]||{stars:{},bestChallenge:{},plays:0},st=0;
-  for(var n=1;n<=10;n++){st+=Math.max(p.stars[n]||0,p.stars[n+"@12"]||0,p.stars[n+"@20"]||0)}
+  if(m.id==="multiplication-tables"){
+    for(var n=1;n<=10;n++){st+=Math.max(p.stars[n]||0,p.stars[n+"@12"]||0,p.stars[n+"@20"]||0)}
+  }else{
+    for(var k in p.stars){st+=p.stars[k]||0}
+  }
   total+=st;
   var best=0;for(var k in (p.bestChallenge||{})){best=Math.max(best,p.bestChallenge[k])}
   var d=document.createElement("div");d.className="mod";

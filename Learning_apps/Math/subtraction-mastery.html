@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subtraction Adventure (Grade 3-4)</title>
+<style>
+:root{
+  --primary:#1976d2;--primary-dark:#115293;--secondary:#9c27b0;--success:#2e7d32;--warning:#ed6c02;--error:#d32f2f;
+  --bg:#eef4fb;--surface:#fff;--text:#1f2937;
+  --e1:0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+  --e2:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
+  --e4:0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12);
+  --e8:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:Roboto,"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:20px;line-height:1.4}
+header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:8px 16px;min-height:64px;background:var(--primary);color:#fff;box-shadow:var(--e4);flex-wrap:wrap;gap:8px}
+header h1{font-size:24px;margin:0;font-weight:500;letter-spacing:.15px}
+.hbtn{position:relative;overflow:hidden;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:999px;font-size:16px;padding:8px 16px;min-height:40px;cursor:pointer;font-family:inherit;font-weight:500;letter-spacing:.4px}
+.hbtn:hover{background:rgba(255,255,255,.28)}
+.crumbbar{display:none;max-width:860px;margin:10px auto 0;padding:0 16px;align-items:center;gap:6px;flex-wrap:wrap;font-size:15px}
+.crumbbar button{background:none;border:none;padding:2px 4px;font-family:inherit;font-size:15px;color:var(--primary);cursor:pointer;font-weight:600;border-radius:6px}
+.crumbbar button:hover{text-decoration:underline;background:#e3ecf9}
+.crumbbar .sep{color:#9aa7b5}
+.crumbbar .cur{color:#546475;font-weight:600}
+main{max-width:860px;margin:0 auto;padding:16px}
+.screen{display:none}.screen.active{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{background:var(--surface);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:var(--e1)}
+h2{margin:0 0 12px;font-size:24px;font-weight:500;color:var(--primary-dark)}
+.note{color:#607d8b;font-size:16px}
+.helper{display:flex;align-items:center;gap:14px;background:#e3f2fd}
+.helper .fox{font-size:64px;animation:bob 2s ease-in-out infinite}
+.bubble{background:#fff;border-radius:4px 20px 20px 20px;padding:12px 16px;flex:1;box-shadow:var(--e1);font-weight:500}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.btn{position:relative;overflow:hidden;border:none;border-radius:14px;padding:14px 24px;min-height:52px;font-size:19px;font-weight:600;color:#fff;background:var(--success);cursor:pointer;font-family:inherit;box-shadow:var(--e2);margin:4px;letter-spacing:.3px;transition:box-shadow .2s,filter .2s}
+.btn:hover{box-shadow:var(--e8);filter:brightness(1.08)}
+.btn:active{box-shadow:var(--e1)}
+.btn.blue{background:var(--primary)}.btn.orange{background:var(--warning)}.btn.pink{background:var(--secondary)}.btn.gray{background:#607d8b}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);animation:rip .6s ease-out;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+.center{text-align:center}
+.big{position:relative;overflow:hidden;border:none;border-radius:16px;padding:14px 8px;font-size:36px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;box-shadow:var(--e2);transition:box-shadow .2s,transform .2s}
+.big:hover{box-shadow:var(--e8);transform:translateY(-3px)}
+.secgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.sectile{font-size:36px;padding:18px 10px}
+.sectile .sectitle{font-size:15px;font-weight:600;margin-top:6px;line-height:1.2}
+.sectile small{display:block;font-size:15px;letter-spacing:2px;margin-top:4px;font-weight:400}
+.trick{background:#e8f5e9;border-left:6px solid var(--success);border-radius:8px 12px 12px 8px;padding:14px 16px}
+.demoArea{min-height:20px;margin:10px 0}
+.demoStep{font-size:20px;font-weight:600;opacity:0;animation:fadeSlide .4s forwards}
+@keyframes fadeSlide{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+/* Concept builder */
+.buildRow{display:flex;align-items:flex-end;justify-content:center;gap:18px;flex-wrap:wrap;margin-bottom:10px}
+.groupBox{background:#f7f9ff;border-radius:16px;padding:14px;min-width:150px;text-align:center;box-shadow:var(--e1);transition:transform .5s ease,opacity .5s ease}
+.plusSign{font-size:36px;font-weight:700;color:var(--secondary);padding-bottom:34px}
+.itemsrow{display:flex;flex-wrap:wrap;gap:4px;min-height:56px;max-width:230px;justify-content:center;align-items:center}
+.item{font-size:30px;display:inline-block;animation:pop .3s both;transition:opacity .2s,filter .2s}
+.item.toRemove{opacity:.35;filter:grayscale(70%)}
+.item.poof{animation:poof .5s forwards}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes poof{to{transform:scale(0) translateY(-16px);opacity:0}}
+.stepper{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px}
+.stepbtn{width:40px;height:40px;border-radius:50%;border:none;background:var(--primary);color:#fff;font-size:18px;cursor:pointer;box-shadow:var(--e1);font-family:inherit}
+.stepbtn:hover{filter:brightness(1.1)}
+.countLbl{font-size:26px;font-weight:700;min-width:30px}
+.eq{font-size:30px;font-weight:700;color:var(--secondary);margin:10px 0}
+.mergeStage{margin-top:8px;text-align:center;overflow:hidden;max-height:0;transition:max-height .4s ease}
+.mergeStage.show{max-height:220px}
+.mergeEq{font-size:34px;font-weight:700;color:var(--success);animation:bump .5s}
+@keyframes bump{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+/* Number line */
+.numline{position:relative;display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;padding:44px 6px 8px}
+.bub{width:56px;height:56px;flex:0 0 auto;border-radius:50%;background:#e8eaf6;box-shadow:var(--e1);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;transition:.2s}
+.bub.on{background:#ffca28;transform:scale(1.15);box-shadow:var(--e4)}
+.hopMarker{position:absolute;top:0;font-size:32px;transform:translate(-50%,0);transition:left .45s ease;pointer-events:none}
+/* Place value demo */
+.pvNums{font-family:"Courier New",monospace;max-width:280px;margin:0 auto}
+.pvRow{font-size:42px;font-weight:700;text-align:right;letter-spacing:2px}
+.pvHr{border-top:4px solid var(--text);margin:6px 0}
+.pvSum{color:var(--success)}
+.pvCarryChip{opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s;text-align:center;color:var(--error);font-weight:700;font-size:18px;min-height:24px}
+.pvCarryChip.show{opacity:1;transform:translateY(0)}
+/* Popups */
+.setrow{display:flex;justify-content:flex-end;margin:-6px 4px 10px}
+.gear{position:relative;overflow:hidden;min-width:44px;height:40px;padding:0 14px;border-radius:999px;font-family:inherit;color:#5b6675;border:none;background:#eceff1;font-size:16px;cursor:pointer;opacity:.75;transition:opacity .2s,background .2s}
+.gear:hover{opacity:1;background:#dfe6ec}
+.overlay{position:fixed;inset:0;background:rgba(20,30,50,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.overlay.show{display:flex;animation:fadeIn .2s}
+.dialog{position:relative;background:#fff;border-radius:20px;padding:26px 22px 22px;max-width:420px;width:100%;text-align:center;box-shadow:var(--e8)}
+.dialog h2{padding:0 30px}
+.xbtn{position:absolute;top:8px;right:8px;width:44px;height:44px;border-radius:50%;border:none;background:#eceff1;font-size:20px;cursor:pointer}
+.xbtn:hover{background:#dfe6ec}
+.seg{display:inline-flex;border:1px solid var(--primary);border-radius:999px;overflow:hidden;box-shadow:var(--e1)}
+.seg button{position:relative;overflow:hidden;border:none;background:#fff;color:var(--primary);font-family:inherit;font-size:18px;font-weight:600;padding:10px 20px;min-height:48px;cursor:pointer;border-right:1px solid var(--primary)}
+.seg button:last-child{border-right:none}
+.seg button.sel{background:var(--primary);color:#fff}
+/* Quiz engine */
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:20px;font-weight:500}
+.timer{background:var(--error);color:#fff;border-radius:999px;padding:6px 18px;font-weight:700;box-shadow:var(--e2)}
+#cScore{background:#fff8e1;border-radius:999px;padding:6px 16px;box-shadow:var(--e1)}
+.q{font-size:56px;text-align:center;font-weight:700;margin:12px 0;color:var(--primary-dark)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{position:relative;overflow:hidden;font-size:36px;padding:16px;border:none;border-radius:16px;background:var(--primary);color:#fff;cursor:pointer;font-family:inherit;font-weight:700;box-shadow:var(--e2);transition:box-shadow .2s}
+.opt:hover{box-shadow:var(--e8)}
+.opt.good{background:var(--success)}.opt.bad{background:var(--error);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.msg{text-align:center;font-size:22px;min-height:32px;font-weight:500;margin-top:10px}
+/* Drag & match */
+.dslots{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.dslot{display:flex;align-items:center;justify-content:center;gap:8px;background:#f3f6fd;border-radius:14px;padding:10px;font-size:24px;font-weight:700;box-shadow:var(--e1);transition:background .15s}
+.dslot .drop{min-width:70px;height:50px;border:3px dashed var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff}
+.dslot.hot{background:#e3f2fd}.dslot.hot .drop{border-style:solid;background:#bbdefb}
+.dslot.ok .drop{border:3px solid var(--success);background:var(--success);color:#fff}
+.dslot.no{animation:shake .3s}
+.dpool{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;min-height:70px}
+.dtile{touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;min-width:76px;height:60px;padding:0 16px;border-radius:14px;background:var(--secondary);color:#fff;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:var(--e2)}
+.dtile.sel{outline:4px solid #ffca28}
+.dtile.lift{opacity:.35}
+.dtile.ghost{position:fixed;z-index:100;pointer-events:none;transform:translate(-50%,-50%) scale(1.1);box-shadow:var(--e8);opacity:.95}
+.miss{text-align:left;background:#fff8e1;border-left:6px solid var(--warning);border-radius:8px 12px 12px 8px;padding:10px 16px;margin:10px 0;font-size:20px}
+.miss div{padding:2px 0;font-weight:700}
+.stars{font-size:56px;text-align:center}
+.confetti{position:fixed;top:-20px;font-size:30px;animation:fall 2.5s linear forwards;pointer-events:none;z-index:99}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+/* Adult settings extras */
+.numset{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px 0;flex-wrap:wrap}
+.numset input{width:60px;padding:8px;font-size:18px;border:2px solid var(--primary);border-radius:8px;text-align:center;font-family:inherit}
+.toggleRow{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+.switch{position:relative;width:52px;height:28px;flex:0 0 52px}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#ccc;border-radius:999px;cursor:pointer;transition:.2s}
+.slider:before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+input:checked+.slider{background:var(--success)}
+input:checked+.slider:before{transform:translateX(24px)}
+/* Worksheet (paper practice) */
+.wsGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-top:10px}
+.wsCard{background:#f7f9ff;border-radius:16px;padding:14px 10px;box-shadow:var(--e1);display:flex;flex-direction:column;align-items:center;border:3px solid transparent;transition:border-color .3s,background .3s}
+.wsCard.wsOk{border-color:var(--success);background:#e8f5e9}
+.wsCard.wsErr{border-color:var(--error);background:#fdecea}
+.wsRow{display:flex}
+.wsLead{width:26px;flex:0 0 26px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--secondary)}
+.wsCell{width:38px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;font-family:"Courier New",monospace;min-height:34px}
+.wsCarryBox{width:26px;height:24px;font-size:14px;text-align:center;border:2px solid var(--warning);border-radius:6px;font-family:inherit;padding:0;background:#fff8e1}
+.wsCarryBox:focus{outline:2px solid var(--warning)}
+.wsAnsBox{width:34px;height:40px;font-size:24px;text-align:center;border:2px solid var(--primary);border-radius:8px;font-family:"Courier New",monospace;font-weight:700;padding:0;background:#fff}
+.wsAnsBox:focus{outline:2px solid var(--primary)}
+.wsAnsBox.wsGood,.wsCarryBox.wsGood{border-color:var(--success);background:#e8f5e9}
+.wsAnsBox.wsBad,.wsCarryBox.wsBad{border-color:var(--error);background:#fdecea}
+.wsHrRow{border-top:3px solid var(--text);width:100%;margin:2px 0 4px}
+.wsIcon{font-size:22px;margin-top:8px;min-height:26px}
+@media(max-width:520px){.q{font-size:44px}.pvRow{font-size:34px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🐰 Subtraction Adventure</h1>
+  <div><button class="hbtn" onclick="goHome()">🏠 Home</button>
+  <button class="hbtn" id="muteBtn" onclick="toggleMute()">🔊 Sound on</button></div>
+</header>
+<nav class="crumbbar" id="crumbbar" aria-label="Breadcrumb"></nav>
+<main>
+
+<!-- HOME -->
+<section id="home" class="screen active">
+  <div class="card helper"><div class="fox">🐰</div><div class="bubble">Hi! I'm Remy the Rabbit. Let's master subtraction together!</div></div>
+  <div class="card"><h2>Pick a topic</h2><div class="secgrid" id="secGrid"></div></div>
+  <div class="card center">
+    <p id="totalStars"></p>
+    <p class="note" id="bestArena"></p>
+  </div>
+</section>
+
+<!-- CONCEPT -->
+<section id="concept" class="screen">
+  <div class="card helper"><div class="fox">🐰</div><div class="bubble">Let's see what subtraction really means. Subtraction is taking some away from a group!</div></div>
+  <div class="setrow"><button class="gear" onclick="openConceptPop()">⚙️ Number range</button></div>
+  <div class="card">
+    <h2>🍎 Take away from a group</h2>
+    <p class="note">Tap ➕ and ➖ to set how many you start with and how many to take away. Watch them fade away!</p>
+    <div class="buildRow">
+      <div class="groupBox">
+        <div class="itemsrow" id="itemsA"></div>
+        <div class="stepper">
+          <button class="stepbtn" onclick="changeStart(-1)">➖</button>
+          <div class="countLbl" id="countA">7</div>
+          <button class="stepbtn" onclick="changeStart(1)">➕</button>
+        </div>
+        <div class="note">🍎 apples to start</div>
+      </div>
+      <div class="plusSign">−</div>
+      <div class="groupBox">
+        <div class="countLbl" id="countB" style="font-size:36px;margin-top:6px">3</div>
+        <div class="stepper">
+          <button class="stepbtn" onclick="changeTake(-1)">➖</button>
+          <button class="stepbtn" onclick="changeTake(1)">➕</button>
+        </div>
+        <div class="note">take away</div>
+      </div>
+    </div>
+    <div class="eq center" id="liveEq">7 − 3 = ?</div>
+    <div class="center">
+      <button class="btn blue" onclick="takeAway()">🫧 Take away!</button>
+      <button class="btn gray" onclick="resetConceptGroups()">↺ Try new numbers</button>
+    </div>
+    <div id="mergeStage" class="mergeStage"></div>
+  </div>
+  <div class="card">
+    <h2>🐾 Hop backward on the number line</h2>
+    <p class="note" id="hopText"></p>
+    <div class="numline" id="numline"></div>
+    <div class="center"><button class="btn pink" onclick="playHop()">▶️ Watch Remy hop!</button></div>
+  </div>
+  <div class="card center">
+    <h2>✅ Quick check</h2>
+    <p class="note">Answer 3 quick questions to earn stars!</p>
+    <button class="btn orange" onclick="startQuizCount('concept','Quick Check',genConceptQuestions)">🎯 Start quick check</button>
+  </div>
+</section>
+
+<!-- BIG NUMBERS -->
+<section id="bignum" class="screen">
+  <div class="card helper"><div class="fox">🐰</div><div class="bubble">Big numbers are just ones, tens, hundreds... Subtract each column, and borrow when the top digit is too small!</div></div>
+  <div class="setrow"><button class="gear" onclick="openBigPop()">⚙️ <span id="bigLbl">2-digit</span></button></div>
+  <div class="card">
+    <h2>🎬 See how borrowing works</h2>
+    <div class="pvNums">
+      <div class="pvRow" id="pvA">0</div>
+      <div class="pvRow" id="pvB">− 0</div>
+      <div class="pvHr"></div>
+      <div class="pvRow pvSum" id="pvSumDisplay">?</div>
+    </div>
+    <div class="pvCarryChip" id="pvCarryChip"></div>
+    <div class="center" style="margin-top:10px">
+      <button class="btn blue" onclick="bignumNewExample()">🎲 New example</button>
+      <button class="btn pink" onclick="playBorrowDemo()">▶️ Show me the borrow!</button>
+    </div>
+  </div>
+  <div class="card center">
+    <h2>📝 Practice</h2>
+    <button class="btn orange" onclick="startQuizCount('bignum','Big Number Practice',function(){return genBignumQuestions(6)})">🎯 Start practice (6 questions)</button>
+    <button class="btn pink" onclick="startWorksheet()">📝 Paper Practice</button>
+  </div>
+</section>
+
+<!-- MENTAL MATH -->
+<section id="mental" class="screen">
+  <div class="card helper"><div class="fox">🐰</div><div class="bubble">These tricks help you subtract fast in your head. Try each one!</div></div>
+  <div class="card" id="trickCards"></div>
+  <div class="card center">
+    <h2>📝 Practice</h2>
+    <button class="btn orange" onclick="startQuizCount('mental','Mental Math Practice',function(){return genMentalQuestions(6)})">🎯 Start practice (6 questions)</button>
+  </div>
+</section>
+
+<!-- FAST SUBTRACTION -->
+<section id="fast" class="screen">
+  <div class="card helper"><div class="fox">🐰</div><div class="bubble">Speed secrets: subtract the biggest place first, and round numbers to make them friendly!</div></div>
+  <div class="card">
+    <h2>⚡ Left-to-right subtraction</h2>
+    <div class="demoArea" id="fastDemo1"></div>
+    <button class="btn blue" onclick="showFastDemo()">▶️ Show example</button>
+  </div>
+  <div class="card center">
+    <h2>⏱️ Speed Drill</h2>
+    <p class="note">Answer as many as you can in 45 seconds!</p>
+    <button class="btn orange" onclick="startQuizTimer('fast','Speed Drill',genFastQ,45)">🚀 Start speed drill</button>
+  </div>
+</section>
+
+<!-- ARENA -->
+<section id="arena" class="screen">
+  <div class="card helper"><div class="fox">🐰</div><div class="bubble">Time to put everything together. Good luck!</div></div>
+  <div class="card center">
+    <h2>⏱️ Mixed Challenge</h2>
+    <button class="btn orange" onclick="startQuizTimer('arena','Mixed Challenge',genArenaQ,60)">🏁 Start 60-second challenge</button>
+  </div>
+  <div class="card center">
+    <h2>🧩 Drag &amp; Match</h2>
+    <button class="btn pink" onclick="startSubDrag()">🧩 Start drag &amp; match</button>
+  </div>
+</section>
+
+<!-- QUIZ ENGINE (used by all sections) -->
+<section id="challenge" class="screen">
+  <div class="card">
+    <div class="top">
+      <span id="cTitle"></span>
+      <span class="timer" id="cTimerWrap">⏱️ <span id="cTime">60</span></span>
+      <span class="note" id="cProg" style="display:none"></span>
+      <span id="cScore">⭐ 0</span>
+    </div>
+    <div id="cVisual" style="display:none;text-align:center;font-size:34px;margin:8px 0"></div>
+    <div class="q" id="cQ"></div>
+    <div class="opts" id="cOpts"></div>
+    <div class="msg" id="cMsg"></div>
+  </div>
+</section>
+
+<!-- DRAG MATCH -->
+<section id="dmatch" class="screen">
+  <div class="card">
+    <div class="top"><span id="dTitle"></span><span id="dScore">Solved: 0</span></div>
+    <p class="center">Drag each answer to the fact it belongs to. You can also tap an answer, then tap a fact.</p>
+    <div class="dslots" id="dSlots"></div>
+    <h3 class="center" style="margin:16px 0 8px">Answers</h3>
+    <div class="dpool" id="dPool"></div>
+    <div class="msg" id="dMsg"></div>
+  </div>
+</section>
+
+<!-- WORKSHEET (paper practice) -->
+<section id="worksheet" class="screen">
+  <div class="card">
+    <div class="top"><span>📝 Paper Practice</span><span id="wsScoreLbl">Solved: 0 / 4</span></div>
+    <p class="note center">Subtract each pair like on paper. Write any borrow in the small box above the next digit, then write the answer below the line.</p>
+    <div class="wsGrid" id="wsGrid"></div>
+    <div class="center" style="margin-top:14px">
+      <button class="btn orange" onclick="checkWorksheet()">✅ Check My Work</button>
+      <button class="btn blue" onclick="startWorksheet()">🔁 New worksheet</button>
+    </div>
+    <div class="msg" id="wsMsg"></div>
+    <div class="center"><button class="btn" onclick="goHome()">🏠 Home</button></div>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section id="result" class="screen">
+  <div class="card center">
+    <div class="fox" style="font-size:80px">🐰</div>
+    <h2 id="rTitle"></h2>
+    <div class="stars" id="rStars"></div>
+    <p id="rText"></p>
+    <div id="rExtra"></div>
+    <button class="btn orange" id="rPractise" style="display:none">🎯 Practise these</button>
+    <button class="btn blue" id="rAgain">🔁 Play again</button>
+    <button class="btn pink" id="rContinue" style="display:none"></button>
+    <button class="btn" onclick="goHome()">🏠 Home</button>
+  </div>
+</section>
+</main>
+
+<div class="overlay" id="bigPop" onclick="if(event.target===this)closeBigPop()" aria-hidden="true">
+  <div class="dialog" role="dialog" aria-modal="true">
+    <button class="xbtn" onclick="closeBigPop()" aria-label="Close">✕</button>
+    <h2>How many digits?</h2>
+    <p class="note">Pick how big the numbers should be.</p>
+    <div class="seg" id="bigSeg"></div>
+    <p class="note" style="margin:18px 0 6px">Problems per worksheet page</p>
+    <div class="seg" id="wsCountSeg"></div>
+    <div class="toggleRow">
+      <label class="switch"><input type="checkbox" id="liveModeChk" onchange="toggleLiveMode(this.checked)"><span class="slider"></span></label>
+      <span class="note">Show live feedback while calculating</span>
+    </div>
+    <div style="margin-top:16px"><button class="btn gray" onclick="closeBigPop()">Done</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="conceptPop" onclick="if(event.target===this)closeConceptPop()" aria-hidden="true">
+  <div class="dialog" role="dialog" aria-modal="true">
+    <button class="xbtn" onclick="closeConceptPop()" aria-label="Close">✕</button>
+    <h2>Set number range</h2>
+    <p class="note">Choose how big the starting group can be (2-9). The take-away amount is always smaller.</p>
+    <div class="numset"><span>🍎 min</span><input type="number" id="caMin" min="2" max="9"><span>max</span><input type="number" id="caMax" min="2" max="9"></div>
+    <div style="margin-top:16px"><button class="btn blue" onclick="saveConceptRange()">Save</button> <button class="btn gray" onclick="closeConceptPop()">Cancel</button></div>
+  </div>
+</div>
+
+<script>
+// ---------- Setup ----------
+var COLORS=["#ff5b5b","#ff8a2b","#e6b800","#22b573","#19a7a7","#3b8bff","#5b6cff","#9b59ff","#f0489b","#e0543c"];
+var CHEERS=["Great job!","Wow!","You rock!","Super!","Yes! Well done!","Awesome!","Fantastic!"];
+var SECTIONS=[
+  {id:"concept",emoji:"🧮",title:"Concept of Subtraction",color:COLORS[5]},
+  {id:"bignum",emoji:"🔢",title:"Big Number Subtraction",color:COLORS[7]},
+  {id:"mental",emoji:"🧠",title:"Mental Math Tricks",color:COLORS[3]},
+  {id:"fast",emoji:"⚡",title:"Fast Subtraction Tricks",color:COLORS[1]},
+  {id:"arena",emoji:"🏆",title:"Practice Arena",color:COLORS[0]}
+];
+var NEXT={concept:"bignum",bignum:"mental",mental:"fast",fast:"arena"};
+var muted=false, actx=null, timer=null, curSection=null;
+function $(id){return document.getElementById(id)}
+function rnd(n){return Math.floor(Math.random()*n)}
+function rndInt(min,max){return min+Math.floor(Math.random()*(max-min+1))}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=rnd(i+1),t=a[i];a[i]=a[j];a[j]=t}return a}
+
+// ---------- Sound ----------
+function beep(freq,dur,type){
+  if(muted)return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    var o=actx.createOscillator(),g=actx.createGain();
+    o.type=type||"sine";o.frequency.value=freq;g.gain.value=0.15;
+    o.connect(g);g.connect(actx.destination);o.start();
+    g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+dur);o.stop(actx.currentTime+dur);
+  }catch(e){}
+}
+function good(){beep(660,.15);setTimeout(function(){beep(880,.2)},120)}
+function bad(){beep(200,.3,"square")}
+function toggleMute(){muted=!muted;$("muteBtn").textContent=muted?"🔇 Sound off":"🔊 Sound on"}
+
+// ---------- Progress (shared with dashboard.html) ----------
+var KEY="kidsLearningProgress", MOD="subtraction-mastery";
+function loadAll(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+function getMod(){
+  var all=loadAll();
+  var m=all[MOD]||{};
+  m.stars=m.stars||{};m.bestChallenge=m.bestChallenge||{};m.plays=m.plays||0;
+  return {all:all,m:m};
+}
+function saveMod(m){
+  try{
+    var all=loadAll();
+    m.title="Subtraction Adventure";m.subject="Math";m.file="Math/subtraction-mastery.html";
+    m.updated=new Date().toISOString();
+    all[MOD]=m;localStorage.setItem(KEY,JSON.stringify(all));
+  }catch(e){}
+}
+function giveStars(sectionId,s){
+  var d=getMod();
+  if(!d.m.stars[sectionId]||d.m.stars[sectionId]<s)d.m.stars[sectionId]=s;
+  d.m.plays++;saveMod(d.m);
+}
+
+// ---------- Navigation ----------
+function show(id){
+  var s=document.querySelectorAll(".screen");
+  for(var i=0;i<s.length;i++)s[i].classList.remove("active");
+  $(id).classList.add("active");window.scrollTo(0,0);
+}
+function goHome(){clearInterval(timer);curSection=null;renderCrumb();buildHome();show("home")}
+function renderCrumb(subLabel){
+  var bar=$("crumbbar");
+  var sec=curSection&&SECTIONS.filter(function(s){return s.id===curSection})[0];
+  if(!sec){bar.style.display="none";bar.innerHTML="";return}
+  bar.style.display="flex";
+  var html='<button onclick="goHome()">🏠 Home</button><span class="sep">›</span>';
+  if(subLabel){
+    html+='<button onclick="openSection(\''+curSection+'\')">'+sec.emoji+' '+sec.title+'</button><span class="sep">›</span><span class="cur">'+subLabel+'</span>';
+  }else{
+    html+='<span class="cur">'+sec.emoji+' '+sec.title+'</span>';
+  }
+  bar.innerHTML=html;
+}
+function buildHome(){
+  var d=getMod().m,total=0,box=$("secGrid");box.innerHTML="";
+  SECTIONS.forEach(function(s){
+    var st=d.stars[s.id]||0;total+=st;
+    var b=document.createElement("button");b.className="big sectile";b.style.background=s.color;
+    b.innerHTML=s.emoji+"<div class='sectitle'>"+s.title+"</div><small>"+"⭐".repeat(st)+"☆".repeat(3-st)+"</small>";
+    b.onclick=function(id){return function(){openSection(id)}}(s.id);
+    box.appendChild(b);
+  });
+  $("totalStars").textContent="Stars collected: "+total+" of 15";
+  var best=0,bc=d.bestChallenge||{};for(var k in bc)best=Math.max(best,bc[k]);
+  $("bestArena").textContent=best?("🏆 Best challenge score: "+best):"";
+}
+function openSection(id){
+  curSection=id;renderCrumb();
+  show(id);
+  if(id==="concept")initConcept();
+  else if(id==="bignum")initBignum();
+  else if(id==="mental")initMental();
+}
+function continueInfo(sectionId){
+  var nxt=NEXT[sectionId];if(!nxt)return null;
+  var sec=SECTIONS.filter(function(s){return s.id===nxt})[0];
+  return {label:"Continue to "+sec.title+" ➜",fn:function(){openSection(nxt)}};
+}
+
+// ---------- CONCEPT: interactive take-away builder ----------
+var CONC_E1="🍎", groupA=7, groupB=3;
+var CA_MIN=5,CA_MAX=9;
+try{var _cr=JSON.parse(localStorage.getItem("kidsLearningSubConceptRange"));if(_cr){CA_MIN=_cr.aMin;CA_MAX=_cr.aMax}}catch(e){}
+function randomizeConceptGroups(){groupA=rndInt(CA_MIN,CA_MAX);groupB=rndInt(1,groupA-1);renderConceptGroups()}
+function initConcept(){randomizeConceptGroups()}
+function openConceptPop(){
+  $("caMin").value=CA_MIN;$("caMax").value=CA_MAX;
+  $("conceptPop").classList.add("show");$("conceptPop").setAttribute("aria-hidden","false");
+}
+function closeConceptPop(){$("conceptPop").classList.remove("show");$("conceptPop").setAttribute("aria-hidden","true")}
+function clampRange2to9(min,max){
+  min=Math.max(2,Math.min(9,Math.round(+min)||2));
+  max=Math.max(2,Math.min(9,Math.round(+max)||2));
+  if(min>max){var t=min;min=max;max=t}
+  return [min,max];
+}
+function saveConceptRange(){
+  var r=clampRange2to9($("caMin").value,$("caMax").value);
+  CA_MIN=r[0];CA_MAX=r[1];
+  try{localStorage.setItem("kidsLearningSubConceptRange",JSON.stringify({aMin:CA_MIN,aMax:CA_MAX}))}catch(e){}
+  closeConceptPop();
+  randomizeConceptGroups();
+}
+function resetConceptGroups(){randomizeConceptGroups()}
+function changeStart(delta){
+  groupA=Math.max(1,Math.min(9,groupA+delta));
+  if(groupB>groupA)groupB=groupA;
+  beep(500+groupA*10,.08);
+  renderConceptGroups();
+}
+function changeTake(delta){
+  groupB=Math.max(0,Math.min(groupA,groupB+delta));
+  beep(500+groupB*10,.08);
+  renderConceptGroups();
+}
+function renderConceptGroups(){
+  $("mergeStage").classList.remove("show");$("mergeStage").innerHTML="";
+  var ia=$("itemsA");ia.innerHTML="";
+  for(var i=0;i<groupA;i++){
+    var s=document.createElement("span");
+    s.className="item"+(i>=groupA-groupB?" toRemove":"");
+    s.textContent=CONC_E1;s.style.animationDelay=(i*0.05)+"s";ia.appendChild(s);
+  }
+  $("countA").textContent=groupA;$("countB").textContent=groupB;
+  $("liveEq").textContent=groupA+" − "+groupB+" = ?";
+  updateNumline();
+}
+function takeAway(){
+  var toRemove=Array.prototype.slice.call(document.querySelectorAll("#itemsA .item.toRemove"));
+  var stage=$("mergeStage");
+  if(!toRemove.length){
+    stage.innerHTML="";
+    var eq0=document.createElement("div");eq0.className="mergeEq";eq0.textContent=groupA+" − 0 = "+groupA;
+    stage.appendChild(eq0);stage.classList.add("show");good();
+    return;
+  }
+  toRemove.forEach(function(el,idx){el.style.animationDelay=(idx*0.08)+"s";el.classList.add("poof")});
+  beep(300,.15);
+  setTimeout(function(){
+    stage.innerHTML="";
+    var eq=document.createElement("div");eq.className="mergeEq";eq.textContent=groupA+" − "+groupB+" = "+(groupA-groupB);
+    stage.appendChild(eq);
+    stage.classList.add("show");
+    good();confetti(10);
+  },500+toRemove.length*80);
+}
+function updateNumline(){
+  var nl=$("numline");nl.innerHTML="";
+  for(var n=0;n<=20;n++){var b=document.createElement("div");b.className="bub";b.id="nl"+n;b.textContent=n;nl.appendChild(b)}
+  var mk=document.createElement("div");mk.className="hopMarker";mk.id="hopMarker";mk.textContent="🐰";nl.appendChild(mk);
+  positionMarker(groupA,false);
+  $("hopText").textContent="Watch Remy start at "+groupA+" and hop back "+groupB+" times!";
+}
+function positionMarker(n,animate){
+  var b=$("nl"+n),mk=$("hopMarker");if(!b||!mk)return;
+  mk.style.left=(b.offsetLeft+b.offsetWidth/2)+"px";
+  if(animate)b.scrollIntoView({inline:"center",behavior:"smooth",block:"nearest"});
+}
+function playHop(){
+  var start=groupA,hops=groupB,i=0;
+  document.querySelectorAll(".bub").forEach(function(b){b.classList.remove("on")});
+  positionMarker(start,true);
+  var sb=$("nl"+start);if(sb)sb.classList.add("on");
+  beep(400,.1);
+  (function step(){
+    if(i>=hops){
+      $("hopText").textContent="Remy landed on "+(start-hops)+"! So "+start+" − "+hops+" = "+(start-hops);
+      good();return;
+    }
+    i++;
+    setTimeout(function(){
+      var pos=start-i;
+      positionMarker(pos,true);
+      var pb=$("nl"+pos);if(pb)pb.classList.add("on");
+      beep(400-pos*10,.12);
+      step();
+    },550);
+  })();
+}
+
+// ---------- BIG NUMBER SUBTRACTION ----------
+var BIGLIM=2, snA=0, snB=0;
+try{var _b=parseInt(localStorage.getItem("kidsLearningSubBigDigits"),10);if(_b===2||_b===3||_b===4)BIGLIM=_b}catch(e){}
+var WSCOUNT=4;
+try{var _w=parseInt(localStorage.getItem("kidsLearningSubWsCount"),10);if([2,4,6,9].indexOf(_w)>=0)WSCOUNT=_w}catch(e){}
+var LIVE_MODE=false;
+try{LIVE_MODE=localStorage.getItem("kidsLearningSubLiveMode")==="1"}catch(e){}
+function randNumWithDigits(d){return rndInt(Math.pow(10,d-1),Math.pow(10,d)-1)}
+function digitsOf(n,len){var s=String(n);while(s.length<len)s="0"+s;var out=[];for(var i=0;i<s.length;i++)out.push(+s[i]);return out}
+function renderPv(a,b){
+  snA=a;snB=b;
+  $("pvA").textContent=a;$("pvB").textContent="− "+b;$("pvSumDisplay").textContent="?";
+  var chip=$("pvCarryChip");chip.classList.remove("show");chip.textContent="";
+}
+function bignumNewExample(){
+  var a=randNumWithDigits(BIGLIM),b=rndInt(1,a);
+  renderPv(a,b);
+}
+function initBignum(){$("bigLbl").textContent=BIGLIM+"-digit";if(!snA)bignumNewExample();else renderPv(snA,snB)}
+function openBigPop(){
+  var sg=$("bigSeg");sg.innerHTML="";
+  [2,3,4].forEach(function(v){
+    var b=document.createElement("button");b.textContent=v+"-digit";if(v===BIGLIM)b.className="sel";
+    b.onclick=function(){setBigLim(v)};sg.appendChild(b);
+  });
+  var wsg=$("wsCountSeg");wsg.innerHTML="";
+  [2,4,6,9].forEach(function(v){
+    var b=document.createElement("button");b.textContent=v;if(v===WSCOUNT)b.className="sel";
+    b.onclick=function(){setWsCount(v)};wsg.appendChild(b);
+  });
+  $("liveModeChk").checked=LIVE_MODE;
+  $("bigPop").classList.add("show");$("bigPop").setAttribute("aria-hidden","false");
+}
+function closeBigPop(){$("bigPop").classList.remove("show");$("bigPop").setAttribute("aria-hidden","true")}
+function setWsCount(v){
+  WSCOUNT=v;
+  try{localStorage.setItem("kidsLearningSubWsCount",String(v))}catch(e){}
+  var wsg=$("wsCountSeg");
+  Array.prototype.forEach.call(wsg.children,function(btn){btn.className=(+btn.textContent===v)?"sel":""});
+}
+function toggleLiveMode(v){
+  LIVE_MODE=v;
+  try{localStorage.setItem("kidsLearningSubLiveMode",v?"1":"0")}catch(e){}
+}
+function setBigLim(v){BIGLIM=v;try{localStorage.setItem("kidsLearningSubBigDigits",String(v))}catch(e){}$("bigLbl").textContent=v+"-digit";closeBigPop();bignumNewExample()}
+function playBorrowDemo(){
+  var len=Math.max(String(snA).length,String(snB).length);
+  var da=digitsOf(snA,len),db=digitsOf(snB,len);
+  var borrow=0,col=len-1,resultDigits=[];
+  $("pvSumDisplay").textContent="";
+  (function step(){
+    if(col<0){
+      var res=resultDigits.join("").replace(/^0+(?=\d)/,"");
+      $("pvSumDisplay").textContent=res;
+      good();return;
+    }
+    var top=da[col]-borrow,borrowOut=0;
+    if(top<db[col]){top+=10;borrowOut=1;}
+    var digit=top-db[col];
+    resultDigits.unshift(digit);
+    $("pvSumDisplay").textContent=resultDigits.join("");
+    beep(450+col*30,.12);
+    if(borrowOut){
+      var chip=$("pvCarryChip");chip.textContent="Borrowed 1 from the next column!";chip.classList.add("show");
+      setTimeout(function(){chip.classList.remove("show")},700);
+    }
+    borrow=borrowOut;
+    col--;
+    setTimeout(step,900);
+  })();
+}
+function genBignumQuestions(n){
+  var qs=[];
+  for(var i=0;i<n;i++){
+    var a=randNumWithDigits(BIGLIM),b=rndInt(1,a),ans=a-b;
+    qs.push({prompt:a+" − "+b+" = ?",ans:ans,opts:makeOptions(ans)});
+  }
+  return qs;
+}
+
+// ---------- WORKSHEET (paper-style practice with borrow boxes) ----------
+var wsProblems=[];
+function buildWsProblem(a,b){
+  var len=String(a).length;
+  var da=digitsOf(a,len),db=digitsOf(b,len);
+  var borrow=0,digits=[],borrowIn=[];
+  for(var c=len-1;c>=0;c--){
+    borrowIn[c]=borrow;
+    var top=da[c]-borrow,bOut=0;
+    if(top<db[c]){top+=10;bOut=1;}
+    digits[c]=top-db[c];
+    borrow=bOut;
+  }
+  return {a:a,b:b,len:len,da:da,db:db,digits:digits,borrowIn:borrowIn};
+}
+function genWorksheetProblems(n){
+  var arr=[];
+  for(var i=0;i<n;i++){var a=randNumWithDigits(BIGLIM),b=rndInt(1,a);arr.push(buildWsProblem(a,b))}
+  return arr;
+}
+function startWorksheet(){
+  wsProblems=genWorksheetProblems(WSCOUNT);
+  curSection="bignum";renderCrumb("Paper Practice");
+  $("wsScoreLbl").textContent="Solved: 0 / "+wsProblems.length;
+  $("wsMsg").textContent="";
+  renderWorksheet();
+  show("worksheet");
+}
+function renderWorksheet(){
+  var grid=$("wsGrid");grid.innerHTML="";
+  wsProblems.forEach(function(p,idx){
+    var len=p.len;
+    var card=document.createElement("div");card.className="wsCard";card.dataset.idx=idx;
+
+    var cRow=document.createElement("div");cRow.className="wsRow";
+    cRow.appendChild(mkLead(""));
+    for(var c=0;c<len;c++){
+      var cell=mkCell();
+      if(c<len-1){
+        var inp=mkInput("wsCarryBox",idx,c,"carry");
+        cell.appendChild(inp);
+      }
+      cRow.appendChild(cell);
+    }
+    card.appendChild(cRow);
+
+    var aRow=document.createElement("div");aRow.className="wsRow";
+    aRow.appendChild(mkLead(""));
+    p.da.forEach(function(d){var cell=mkCell();cell.textContent=d;aRow.appendChild(cell)});
+    card.appendChild(aRow);
+
+    var bRow=document.createElement("div");bRow.className="wsRow";
+    bRow.appendChild(mkLead("−"));
+    p.db.forEach(function(d){var cell=mkCell();cell.textContent=d;bRow.appendChild(cell)});
+    card.appendChild(bRow);
+
+    var hr=document.createElement("div");hr.className="wsHrRow";card.appendChild(hr);
+
+    var ansRow=document.createElement("div");ansRow.className="wsRow";
+    ansRow.appendChild(mkLead(""));
+    for(var c2=0;c2<len;c2++){
+      var cell2=mkCell();cell2.appendChild(mkInput("wsAnsBox",idx,c2,"ans"));ansRow.appendChild(cell2);
+    }
+    card.appendChild(ansRow);
+
+    var icon=document.createElement("div");icon.className="wsIcon";icon.id="wsIcon"+idx;card.appendChild(icon);
+    grid.appendChild(card);
+  });
+}
+function mkLead(txt){var d=document.createElement("div");d.className="wsLead";d.textContent=txt;return d}
+function mkCell(){var d=document.createElement("div");d.className="wsCell";return d}
+function mkInput(cls,idx,col,kind){
+  var inp=document.createElement("input");inp.className=cls;inp.maxLength=1;inp.setAttribute("inputmode","numeric");
+  inp.dataset.idx=idx;inp.dataset.col=col;inp.dataset.kind=kind;
+  inp.addEventListener("input",wsInputHandler);
+  inp.addEventListener("keydown",wsKeyHandler);
+  return inp;
+}
+function wsInputHandler(e){
+  var el=e.target;
+  el.value=el.value.replace(/[^0-9]/g,"").slice(-1);
+  if(LIVE_MODE)wsLiveCheck(el);
+  if(el.value){var next=wsFindInput(el,1);if(next)next.focus()}
+}
+function wsKeyHandler(e){
+  if(e.key==="Backspace"&&!e.target.value){
+    var prev=wsFindInput(e.target,-1);
+    if(prev)prev.focus();
+  }
+}
+function wsFindInput(el,dir){
+  var idx=el.dataset.idx;
+  var all=Array.prototype.slice.call(document.querySelectorAll('.wsCard[data-idx="'+idx+'"] input'));
+  var i=all.indexOf(el);
+  return all[i+dir]||null;
+}
+function wsExpected(idx,kind,col){
+  var p=wsProblems[idx];
+  if(kind==="carry")return String(p.borrowIn[col]);
+  return String(p.digits[col]);
+}
+function wsLiveCheck(el){
+  var exp=wsExpected(+el.dataset.idx,el.dataset.kind,+el.dataset.col);
+  el.classList.remove("wsGood","wsBad");
+  if(el.value==="")return;
+  el.classList.add(el.value===exp?"wsGood":"wsBad");
+}
+function checkWorksheet(){
+  var solved=0;
+  wsProblems.forEach(function(p,idx){
+    var card=document.querySelector('.wsCard[data-idx="'+idx+'"]');
+    var inputs=card.querySelectorAll("input");
+    var ok=true;
+    inputs.forEach(function(inp){
+      inp.classList.remove("wsGood","wsBad");
+      if(inp.dataset.kind==="carry"&&inp.value==="")return;
+      var exp=wsExpected(idx,inp.dataset.kind,+inp.dataset.col);
+      var val=inp.value===""?"0":inp.value;
+      var good=val===exp;
+      if(!good)ok=false;
+      inp.classList.add(good?"wsGood":"wsBad");
+    });
+    card.classList.remove("wsOk","wsErr");
+    card.classList.add(ok?"wsOk":"wsErr");
+    $("wsIcon"+idx).textContent=ok?"✅":"❌";
+    if(ok)solved++;
+  });
+  var n=wsProblems.length;
+  $("wsScoreLbl").textContent="Solved: "+solved+" / "+n;
+  var s=solved===n?3:(solved>=Math.ceil(n*0.66)?2:(solved>0?1:0));
+  giveStars("bignum",s);
+  if(solved===n){good();confetti();$("wsMsg").textContent="Perfect! All problems correct!"}
+  else if(solved>0){beep(500,.1);$("wsMsg").textContent="You solved "+solved+" of "+n+". Check the ❌ cards and try again!"}
+  else{bad();$("wsMsg").textContent="Not yet. Check each column and try again!"}
+}
+
+// ---------- MENTAL MATH TRICKS ----------
+var TRICKS_M=[
+  {id:0,title:"Count up the gap",desc:"If the numbers are close, count up from the smaller to the bigger."},
+  {id:1,title:"Subtract 9 the easy way",desc:"Subtract 10, then add 1 back."},
+  {id:2,title:"Break into tens and ones",desc:"Subtract the tens, then subtract the ones."},
+  {id:3,title:"Compensation",desc:"Round the number you are taking away, subtract, then adjust back."}
+];
+function initMental(){buildTrickCards()}
+function buildTrickCards(){
+  var box=$("trickCards");box.innerHTML="";
+  TRICKS_M.forEach(function(t){
+    var d=document.createElement("div");d.className="trick";d.style.marginBottom="14px";
+    d.innerHTML="<b>💡 "+t.title+"</b><p>"+t.desc+"</p><div class='demoArea' id='demo"+t.id+"'></div><button class='btn blue' onclick='showTrickDemo("+t.id+")'>▶️ Show example</button>";
+    box.appendChild(d);
+  });
+}
+function showTrickDemo(id){
+  var steps=[];
+  if(id===0){
+    var b=rndInt(52,88);var bOnes=b%10;if(bOnes===0){b++;bOnes=1}
+    var nextTen=b+(10-bOnes),extra=rndInt(0,5),a=nextTen+extra;
+    var diff1=nextTen-b,diff2=extra;
+    steps=[a+" − "+b,"Count up: "+b+" → "+nextTen+" (+"+diff1+"), then "+nextTen+" → "+a+" (+"+diff2+")","Total steps: "+diff1+" + "+diff2+" = "+(diff1+diff2),"= "+(a-b)];
+  }else if(id===1){
+    var a=rndInt(13,99);
+    steps=[a+" − 9","= "+a+" − 10 + 1","= "+(a-10)+" + 1","= "+(a-9)];
+  }else if(id===2){
+    var bt=rndInt(1,6)*10,bo=rndInt(1,8),b=bt+bo;
+    var ao=rndInt(bo,9),at=bt+rndInt(1,3)*10,a=at+ao;
+    steps=[a+" − "+b,"= ("+at+" − "+bt+") + ("+ao+" − "+bo+")","= "+(at-bt)+" + "+(ao-bo),"= "+(a-b)];
+  }else{
+    var bOnes=rnd(2)?8:9,bTens=rndInt(1,7)*10,b=bTens+bOnes,round=bTens+10,adjust=round-b;
+    var a=rndInt(round+5,99);
+    steps=[a+" − "+b,"= "+a+" − "+round+" + "+adjust,"= "+(a-round)+" + "+adjust,"= "+(a-b)];
+  }
+  var el=$("demo"+id);el.innerHTML="";
+  steps.forEach(function(s,i){
+    var line=document.createElement("div");line.className="demoStep";line.textContent=s;line.style.animationDelay=(i*0.4)+"s";el.appendChild(line);
+  });
+  beep(500,.1);
+}
+function genMentalQuestions(n){
+  var qs=[];
+  for(var i=0;i<n;i++){
+    var pat=rnd(4),a,b;
+    if(pat===0){b=rndInt(52,88);a=b+rndInt(2,9);}
+    else if(pat===1){a=rndInt(13,99);b=9;}
+    else if(pat===2){a=rndInt(23,79);b=rndInt(11,Math.max(11,a-1));}
+    else{a=rndInt(41,98);b=rndInt(18,29);}
+    if(b>a){var t=a;a=b;b=t;}
+    var ans=a-b;
+    qs.push({prompt:a+" − "+b+" = ?",ans:ans,opts:makeOptions(ans)});
+  }
+  return qs;
+}
+
+// ---------- FAST SUBTRACTION ----------
+function showFastDemo(){
+  var bo=rndInt(1,5),bt=rndInt(2,7)*10,b=bt+bo;
+  var ao=rndInt(bo,9),at=bt+rndInt(1,3)*10,a=at+ao;
+  var steps=[a+" − "+b,"Tens first: "+at+" − "+bt+" = "+(at-bt),"Ones next: "+ao+" − "+bo+" = "+(ao-bo),"Total: "+(at-bt)+" + "+(ao-bo)+" = "+(a-b)];
+  var el=$("fastDemo1");el.innerHTML="";
+  steps.forEach(function(s,i){var line=document.createElement("div");line.className="demoStep";line.textContent=s;line.style.animationDelay=(i*0.4)+"s";el.appendChild(line)});
+  beep(500,.1);
+}
+function genFastQ(){
+  var a=rndInt(13,89),b=rndInt(1,a),ans=a-b;
+  return {prompt:a+" − "+b+" = ?",ans:ans,opts:makeOptions(ans)};
+}
+
+// ---------- CONCEPT quiz + shared option maker ----------
+function makeOptions(ans){
+  var opts=[ans],guard=0;
+  while(opts.length<4&&guard<300){
+    guard++;
+    var span=Math.max(3,Math.round(ans*0.2)+3);
+    var w=ans+rndInt(1,span)*(rnd(2)?1:-1);
+    if(w>=0&&opts.indexOf(w)<0)opts.push(w);
+  }
+  return shuffle(opts);
+}
+function genConceptQuestions(){
+  var qs=[];
+  for(var i=0;i<3;i++){
+    var a=rndInt(4,9),b=rndInt(1,a),ans=a-b;
+    qs.push({visual:CONC_E1.repeat(a-b)+" "+"❌".repeat(b),prompt:a+" − "+b+" = ?",ans:ans,opts:makeOptions(ans)});
+  }
+  return qs;
+}
+function genArenaQ(){
+  var pick=rnd(3);
+  if(pick===0)return genBignumQuestions(1)[0];
+  if(pick===1)return genMentalQuestions(1)[0];
+  return genFastQ();
+}
+
+// ---------- Quiz engine (count mode + timer mode, shared by all sections) ----------
+var qz={},qzLocked=false,qzCurAns=0,qzRestart=null;
+function startQuizCount(sectionId,title,genListFn){
+  var questions=genListFn();
+  qz={mode:"count",section:sectionId,title:title,questions:questions,index:0,score:0,total:questions.length};
+  qzRestart=function(){startQuizCount(sectionId,title,genListFn)};
+  curSection=sectionId;renderCrumb(title);
+  $("cTitle").textContent=title;
+  $("cTimerWrap").style.display="none";$("cProg").style.display="";
+  $("cScore").textContent="⭐ 0";$("cMsg").textContent="";
+  show("challenge");nextQuizQ();
+}
+function startQuizTimer(sectionId,title,genFn,seconds){
+  qz={mode:"timer",section:sectionId,title:title,genFn:genFn,seconds:seconds,left:seconds,score:0};
+  qzRestart=function(){startQuizTimer(sectionId,title,genFn,seconds)};
+  curSection=sectionId;renderCrumb(title);
+  $("cTitle").textContent=title;
+  $("cTimerWrap").style.display="";$("cProg").style.display="none";
+  $("cTime").textContent=seconds;$("cScore").textContent="⭐ 0";$("cMsg").textContent="";
+  show("challenge");nextQuizQ();
+  clearInterval(timer);
+  timer=setInterval(function(){
+    qz.left--;$("cTime").textContent=qz.left;
+    if(qz.left<=0){clearInterval(timer);finishQuiz()}
+  },1000);
+}
+function nextQuizQ(){
+  qzLocked=false;var q;
+  if(qz.mode==="count"){
+    if(qz.index>=qz.total){finishQuiz();return}
+    q=qz.questions[qz.index];
+    $("cProg").textContent="Question "+(qz.index+1)+" of "+qz.total;
+  }else{
+    q=qz.genFn();
+  }
+  qzCurAns=q.ans;
+  var v=$("cVisual");
+  if(q.visual){v.style.display="";v.textContent=q.visual}else{v.style.display="none";v.textContent=""}
+  $("cQ").textContent=q.prompt;
+  var o=$("cOpts");o.innerHTML="";
+  q.opts.forEach(function(val){
+    var bt=document.createElement("button");bt.className="opt";bt.textContent=val;
+    bt.onclick=function(){quizAnswer(bt,val)};o.appendChild(bt);
+  });
+}
+function quizAnswer(bt,v){
+  if(qzLocked)return;qzLocked=true;
+  var correct=v===qzCurAns;
+  if(correct){bt.classList.add("good");good();qz.score++;$("cScore").textContent="⭐ "+qz.score;$("cMsg").textContent=CHEERS[rnd(CHEERS.length)];}
+  else{bt.classList.add("bad");bad();$("cMsg").textContent="Not yet! The answer was "+qzCurAns;}
+  setTimeout(function(){
+    $("cMsg").textContent="";
+    if(qz.mode==="count")qz.index++;
+    nextQuizQ();
+  },correct?500:1300);
+}
+function finishQuiz(){
+  clearInterval(timer);
+  var sectionId=qz.section,score=qz.score,s;
+  if(qz.mode==="count"){
+    s=score>=Math.ceil(qz.total*0.85)?3:(score>=Math.ceil(qz.total*0.5)?2:(score>0?1:0));
+    giveStars(sectionId,s);
+    showResult("Great work!",s,"You got "+score+" of "+qz.total+" correct.",function(){qzRestart()},null,null,continueInfo(sectionId));
+  }else{
+    var d=getMod(),best=d.m.bestChallenge[sectionId]||0,newBest=score>best;
+    if(newBest)d.m.bestChallenge[sectionId]=score;
+    s=score>=12?3:(score>=8?2:(score>=4?1:0));
+    if(s>(d.m.stars[sectionId]||0))d.m.stars[sectionId]=s;
+    d.m.plays++;saveMod(d.m);
+    showResult("Time's up!",s,"You answered "+score+" correctly."+(newBest?" New best score! 🎉":" Your best is "+best+"."),function(){qzRestart()},null,null,continueInfo(sectionId));
+  }
+}
+
+// ---------- Drag & Match (Practice Arena) ----------
+var dFacts=[],dSel=null,dFirst=0,dDone=0,dMissed={},dPractice=false;
+function pickSubFacts(count){
+  var facts=[],seen={},tries=0;
+  while(facts.length<count&&tries<500){
+    tries++;
+    var b=rndInt(1,20),a=b+rndInt(5,79),d=a-b;
+    if(seen[d])continue;seen[d]=1;facts.push({a:a,b:b,p:d});
+  }
+  return facts;
+}
+function startSubDrag(){runSubDrag(pickSubFacts(6),false)}
+function runSubDrag(facts,practice){
+  dFacts=facts;dPractice=!!practice;dDone=0;dFirst=0;dMissed={};dSel=null;
+  curSection="arena";renderCrumb(practice?"Practice: Drag & Match":"Drag & Match");
+  $("dTitle").textContent=(practice?"Practice: ":"Drag & Match: ")+"Subtraction facts";
+  $("dScore").textContent="Solved: 0 / "+dFacts.length;$("dMsg").textContent="";
+  var sl=$("dSlots"),pl=$("dPool");sl.innerHTML="";pl.innerHTML="";
+  dFacts.forEach(function(f,i){
+    var d=document.createElement("div");d.className="dslot";d.dataset.i=i;
+    d.innerHTML=f.a+" − "+f.b+" = <span class='drop'></span>";
+    d.onclick=function(){if(dSel&&!d.classList.contains("ok"))attempt(dSel,d)};
+    sl.appendChild(d);
+  });
+  var order=shuffle(dFacts.map(function(f,i){return i}));
+  order.forEach(function(i){
+    var t2=document.createElement("div");t2.className="dtile";t2.dataset.i=i;t2.textContent=dFacts[i].p;
+    t2.addEventListener("pointerdown",function(e){tileDown(e,t2)});pl.appendChild(t2);
+  });
+  show("dmatch");
+}
+function slotAt(x,y){var el=document.elementFromPoint(x,y);var sl=el&&el.closest?el.closest(".dslot"):null;return(sl&&!sl.classList.contains("ok"))?sl:null}
+function clearHot(){var h=document.querySelectorAll(".dslot.hot");for(var i=0;i<h.length;i++)h[i].classList.remove("hot")}
+function tileDown(e,tile){
+  e.preventDefault();
+  var sx=e.clientX,sy=e.clientY,moved=false,ghost=null;
+  try{tile.setPointerCapture(e.pointerId)}catch(x){}
+  function mv(ev){
+    if(!moved&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>8){
+      moved=true;ghost=tile.cloneNode(true);ghost.className="dtile ghost";document.body.appendChild(ghost);tile.classList.add("lift");
+    }
+    if(moved){ghost.style.left=ev.clientX+"px";ghost.style.top=ev.clientY+"px";clearHot();var sl=slotAt(ev.clientX,ev.clientY);if(sl)sl.classList.add("hot")}
+  }
+  function end(ev,cancel){
+    tile.removeEventListener("pointermove",mv);tile.removeEventListener("pointerup",up);tile.removeEventListener("pointercancel",cn);
+    if(moved){
+      ghost.remove();tile.classList.remove("lift");clearHot();
+      if(!cancel){var sl=slotAt(ev.clientX,ev.clientY);if(sl)attempt(tile,sl)}
+    }else if(!cancel){
+      var was=tile.classList.contains("sel");
+      var all=document.querySelectorAll(".dtile.sel");for(var i=0;i<all.length;i++)all[i].classList.remove("sel");
+      if(was){dSel=null}else{tile.classList.add("sel");dSel=tile;beep(500,.08)}
+    }
+  }
+  function up(ev){end(ev,false)}
+  function cn(ev){end(ev,true)}
+  tile.addEventListener("pointermove",mv);tile.addEventListener("pointerup",up);tile.addEventListener("pointercancel",cn);
+}
+function attempt(tile,slot){
+  var i=+slot.dataset.i;
+  if(+tile.dataset.i===i){
+    slot.classList.add("ok");slot.querySelector(".drop").textContent=dFacts[i].p;
+    tile.remove();dSel=null;dDone++;if(!dMissed[i])dFirst++;good();
+    $("dScore").textContent="Solved: "+dDone+" / "+dFacts.length;
+    $("dMsg").textContent=CHEERS[rnd(CHEERS.length)];
+    if(dDone===dFacts.length)setTimeout(finishDrag,700);
+  }else{
+    dMissed[i]=1;bad();tile.classList.remove("sel");dSel=null;
+    slot.classList.add("no");setTimeout(function(){slot.classList.remove("no")},350);
+    $("dMsg").textContent="Not yet. Try another answer!";
+  }
+}
+function finishDrag(){
+  var n=dFacts.length,s=dFirst===n?3:(dFirst>=Math.ceil(n*0.66)?2:1);
+  if(!dPractice)giveStars("arena",s);
+  var missed=dFacts.filter(function(f,i){return dMissed[i]});
+  var extra,practise=null;
+  if(missed.length){
+    extra='<div class="miss"><b>Facts to practise:</b>'+missed.map(function(f){return"<div>"+f.a+" − "+f.b+" = "+f.p+"</div>"}).join("")+"</div>";
+    practise=function(){runSubDrag(missed,true)};
+  }else{extra='<div class="miss" style="border-color:#2e7d32;background:#e8f5e9"><b>No mistakes. Great job!</b></div>'}
+  showResult(dPractice?"Practice done!":"All matched!",s,"You got "+dFirst+" of "+n+" right on the first try."+(dPractice?" (Practice does not change your stars.)":""),function(){startSubDrag()},extra,practise);
+}
+
+// ---------- Result ----------
+function showResult(title,s,text,again,extra,practise,cont){
+  renderCrumb("Result");
+  $("rTitle").textContent=title;
+  $("rStars").textContent="⭐".repeat(s)+"☆".repeat(3-s);
+  $("rText").textContent=text+(s===0?" Keep practicing. You can do it!":"");
+  $("rExtra").innerHTML=extra||"";
+  var pb=$("rPractise");pb.style.display=practise?"":"none";pb.onclick=practise||null;
+  $("rAgain").onclick=again;
+  var cb=$("rContinue");
+  if(cont){cb.style.display="";cb.textContent=cont.label;cb.onclick=cont.fn}else{cb.style.display="none"}
+  show("result");
+  if(s>0){good();confetti()}
+}
+function confetti(n){
+  n=n||25;
+  var e=["🎉","⭐","🎈","✨"];
+  for(var i=0;i<n;i++){
+    var c=document.createElement("div");c.className="confetti";c.textContent=e[rnd(4)];
+    c.style.left=rnd(95)+"vw";c.style.animationDelay=(Math.random()*0.8)+"s";
+    document.body.appendChild(c);
+    (function(x){setTimeout(function(){x.remove()},3500)})(c);
+  }
+}
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeBigPop()});
+// ---------- Material ripple effect ----------
+document.addEventListener("pointerdown",function(e){
+  var b=e.target.closest&&e.target.closest("button");
+  if(!b)return;
+  var r=b.getBoundingClientRect(),d=Math.max(r.width,r.height)/2,sp=document.createElement("span");
+  sp.className="ripple";sp.style.width=sp.style.height=d+"px";
+  sp.style.left=(e.clientX-r.left-d/2)+"px";sp.style.top=(e.clientY-r.top-d/2)+"px";
+  b.appendChild(sp);setTimeout(function(){sp.remove()},600);
+});
+buildHome();
+</script>
+</body>
+</html>
